@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: ddns
+    image: oznu/cloudflare-ddns:latest
+    restart: unless-stopped
+    environment:
+      - API_KEY=$CF_API_KEY
+      - ZONE=$CF_ZONE
+      - SUBDOMAIN=$CF_SUBDOMAIN
+      - PROXIED=$CF_PROXIED
+    networks:
+      - ddns
+
+networks:
+  ddns:
+    name: ddns

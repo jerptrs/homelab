@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.$SERVICE.rule=Host(`$DOMAIN`)
+      - traefik.http.services.$SERVICE.loadbalancer.server.port=9000
+      - traefik.http.routers.$SERVICE.entrypoints=websecure
+      - traefik.http.routers.$SERVICE.tls.certresolver=letsencrypt
+
+networks:
+  traefik:
+    external: true

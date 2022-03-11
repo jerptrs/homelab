@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: always
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 80:80/tcp
+    environment:
+      - TZ=$TIMEZONE
+      - WEBPASSWORD=$WEBPASSWORD
+      - WEBTHEME=$WEBTHEME
+    volumes:
+      - /var/pihole/etc:/etc/pihole
+      - /var/pihole/dnsmasq.d:/etc/dnsmasq.d
+      
