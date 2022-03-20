@@ -8,7 +8,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
     environment:
       - CLOUDFLARE_EMAIL=$CLOUDFLARE_EMAIL
       - CLOUDFLARE_DNS_API_TOKEN=$CLOUDFLARE_TOKEN
@@ -27,10 +26,9 @@ services:
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
     # https://major.io/2021/08/16/wildcard-letsencrypt-certificates-traefik-cloudflare/
     command: 
-      # Tell Traefik to discover containers using the Docker API
       - --providers.docker=true
-      # Enable the Trafik dashboard
-      - --api.dashboard=true
+      # DISABLE the Trafik dashboard
+      - --api.dashboard=false
       - --api.insecure=true
       # Set up LetsEncrypt
       - --certificatesresolvers.letsencrypt.acme.dnschallenge=true

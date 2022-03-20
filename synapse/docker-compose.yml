@@ -1,21 +1,13 @@
 version: '3.8'
 
 services:
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    restart: always
-    ports:
-      - 53:53/tcp
-      - 53:53/udp
+  synapse:
+    container_name: synapse 
+    image: matrixdotorg/synapse:latest
+    restart: unless-stopped
     environment:
-      - TZ=$TIMEZONE
-      - WEBPASSWORD=$WEBPASSWORD
-      - WEBTHEME=$WEBTHEME
-      - VIRTUAL_HOST=$DOMAIN
-    volumes:
-      - /var/pihole/etc:/etc/pihole
-      - /var/pihole/dnsmasq.d:/etc/dnsmasq.d
+      - SYNAPSE_REPORT_STATS=yes
+      - SYNAPSE_SERVER_NAME=$DOMAIN
     networks:
       - traefik
     labels:
@@ -24,7 +16,13 @@ services:
       - traefik.http.services.$SERVICE.loadbalancer.server.port=$HTTP_PORT
       - traefik.http.routers.$SERVICE.entrypoints=websecure
       - traefik.http.routers.$SERVICE.tls.certresolver=letsencrypt
+    volumes:
+      - synapse:/data
 
 networks:
   traefik:
-    name: traefik
+    external: true 
+
+volumes:
+  synapse:
+    name: synapse

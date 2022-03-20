@@ -1,21 +1,12 @@
 version: '3.8'
 
 services:
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    restart: always
-    ports:
-      - 53:53/tcp
-      - 53:53/udp
-    environment:
-      - TZ=$TIMEZONE
-      - WEBPASSWORD=$WEBPASSWORD
-      - WEBTHEME=$WEBTHEME
-      - VIRTUAL_HOST=$DOMAIN
+  nodered:
+    container_name: nodered 
+    image: nodered/node-red
+    restart: unless-stopped
     volumes:
-      - /var/pihole/etc:/etc/pihole
-      - /var/pihole/dnsmasq.d:/etc/dnsmasq.d
+      - nodered:/data
     networks:
       - traefik
     labels:
@@ -28,3 +19,7 @@ services:
 networks:
   traefik:
     name: traefik
+
+volumes:
+  nodered:
+    name: nodered
