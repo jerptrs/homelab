@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  openldap:
+    container_name: openldap
+    image: docker.io/bitnami/openldap:2.6
+    restart: unless-stopped
+    environment:
+      - LDAP_ADMIN_USERNAME=$LDAP_ADMIN_USERNAME
+      - LDAP_ADMIN_PASSWORD=$LDAP_ADMIN_PASSWORD
+      # - LDAP_USERS=user01,user02
+      # - LDAP_PASSWORDS=password1,password2
+    networks:
+      - openldap
+
+networks:
+  openldap:
+    name: openldap
