@@ -13,3 +13,7 @@ services:
 networks:
   NETWORK_NAME:
     name: 
+
+volumes:
+  VOLUME_NAME:
+    name: VOLUME_NAME
