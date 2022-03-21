@@ -3,16 +3,26 @@ version: '3.8'
 services:
   openldap:
     container_name: openldap
-    image: docker.io/bitnami/openldap:2.6
+    image: osixia/openldap:1.5.0
     restart: unless-stopped
+    expose:
+      - 389
+      - 636
     environment:
+      - LDAP_ORGANISATION=$LDAP_ORGANISATION
       - LDAP_ADMIN_USERNAME=$LDAP_ADMIN_USERNAME
       - LDAP_ADMIN_PASSWORD=$LDAP_ADMIN_PASSWORD
       # - LDAP_USERS=user01,user02
       # - LDAP_PASSWORDS=password1,password2
     networks:
       - openldap
+    volumes:
+      - openldap:/etc/ldap/slapd.d
 
 networks:
+  openldap:
+    name: openldap
+
+volumes:
   openldap:
     name: openldap
