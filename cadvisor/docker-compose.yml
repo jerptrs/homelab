@@ -7,7 +7,7 @@ services:
     image: zcube/cadvisor:latest
     restart: unless-stopped
     ports:
-      - 8081:8080
+      - 8082:8080
     networks:
       - monitoring
     volumes:
@@ -15,7 +15,7 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-      #- /dev/disk/:/dev/disk:ro
+      - /dev/disk/:/dev/disk:ro
 
 networks:
   monitoring:
