@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  cadvisor:
+    container_name: cadvisor
+    hostname: cadvisor
+    image: zcube/cadvisor:latest
+    restart: unless-stopped
+    expose:
+      - 8080
+    networks:
+      - monitoring
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+
+networks:
+  monitoring:
+    name: monitoring
