@@ -3,6 +3,7 @@ version: '3.2'
 services:
   postgresql:
     container_name: authentik_postgresql
+    hostname: authentik_postgresql
     image: postgres:12-alpine
     restart: unless-stopped
     env_file:
@@ -28,7 +29,7 @@ services:
       - .env
     environment:
       AUTHENTIK_REDIS__HOST: redis
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__HOST: authentik_postgresql
       AUTHENTIK_POSTGRESQL__USER: password
       AUTHENTIK_POSTGRESQL__NAME: password
       AUTHENTIK_POSTGRESQL__PASSWORD: password
@@ -54,11 +55,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - authentik
-      - traefik
 
 networks:
   traefik:
     external: true
+  authentik:
+    name: authentik
     
 volumes:
   authentik_postgresql:
