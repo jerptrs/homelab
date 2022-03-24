@@ -4,7 +4,7 @@ services:
   cadvisor:
     container_name: cadvisor
     hostname: cadvisor
-    image: zcube/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor
     restart: unless-stopped
     ports:
       - 8081:8080
