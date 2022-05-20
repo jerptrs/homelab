@@ -1,29 +1,24 @@
-version: '3.8'
+version: "3"
 
 services:
   pihole:
+    hostname: ${HOSTNAME}
     container_name: pihole
     image: pihole/pihole:latest
-    restart: always
+    env_file:
+      - ./.env
     ports:
-      - 53:53/tcp
-      - 53:53/udp
-    environment:
-      - TZ=$TIMEZONE
-      - WEBPASSWORD=$WEBPASSWORD
-      - WEBTHEME=$WEBTHEME
-      - VIRTUAL_HOST=$DOMAIN
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
     volumes:
-      - /var/pihole/etc:/etc/pihole
-      - /var/pihole/dnsmasq.d:/etc/dnsmasq.d
+      - '/container/pihole/etc:/etc/pihole'
+      - '/container/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'      
+    labels:
+      - "traefik.http.routers.homeassistant.rule=Host(`${HOSTNAME}`)"
+    restart: unless-stopped
     networks:
       - traefik
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.$SERVICE.rule=Host(`$DOMAIN`)
-      - traefik.http.services.$SERVICE.loadbalancer.server.port=$HTTP_PORT
-      - traefik.http.routers.$SERVICE.entrypoints=websecure
-      - traefik.http.routers.$SERVICE.tls.certresolver=letsencrypt
 
 networks:
   traefik:
