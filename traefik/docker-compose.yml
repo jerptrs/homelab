@@ -2,54 +2,34 @@ version: '3.8'
 
 services:
   traefik:
+    hostname: ${HOSTNAME}
     container_name: traefik
     image: traefik:v2.6
     restart: always
+    env_file:
+      - ./.env
     ports:
-      - 80:80
-      - 443:443
-    environment:
-      - CLOUDFLARE_EMAIL=$CLOUDFLARE_EMAIL
-      - CLOUDFLARE_DNS_API_TOKEN=$CLOUDFLARE_TOKEN
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - certs:/letsencrypt
-    networks:
-      - traefik
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`$DOMAIN`)
-      - traefik.http.routers.traefik.entrypoints=websecure
-      - traefik.http.routers.traefik.tls.certresolver=letsencrypt
-      - traefik.http.routers.traefik.service=api@internal
-      - traefik.http.routers.traefik.middlewares=strip
-      - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
-    # https://major.io/2021/08/16/wildcard-letsencrypt-certificates-traefik-cloudflare/
-    command: 
-      - --providers.docker=true
-      # DISABLE the Trafik dashboard
-      - --api.dashboard=false
-      - --api.insecure=true
-      # Set up LetsEncrypt
+      - 8443:443
+    command:
+      - --providers.docker
+      - --entrypoints.https.address=:443
+      - --certificatesresolvers.letsencrypt.acme.email=${CLOUDFLARE_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
       - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
-      - --certificatesresolvers.letsencrypt.acme.email=$ACME_EMAIL
-      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
-      # Set up an insecure listener that redirects all traffic to TLS
-      - --entrypoints.web.address=:80
-      - --entrypoints.web.http.redirections.entrypoint.to=websecure
-      - --entrypoints.web.http.redirections.entrypoint.scheme=https
-      - --entrypoints.websecure.address=:443
-      # Set up the TLS configuration for our websecure listener
-      - --entrypoints.websecure.http.tls=true
-      - --entrypoints.websecure.http.tls.certResolver=letsencrypt
-      - --entrypoints.websecure.http.tls.domains[0].main=$DOMAIN
-      - --entrypoints.websecure.http.tls.domains[0].sans=*.$DOMAIN
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53
+    labels:
+      - traefik.http.routers.traefik.entrypoints=https
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.tls.certresolver=letsencrypt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /container/traefik/certs:/letsencrypt
+    networks:
+      - traefik
 
 networks:
   traefik:
     name: traefik
-
-volumes:
-  certs:
-    name: certs
