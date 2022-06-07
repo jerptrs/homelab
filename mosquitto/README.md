@@ -5,3 +5,5 @@
 5. openssl x509 -req -in mosquitto-serv.csr -CA mosquitto-ca.crt -CAkey mosquitto-ca.key -CAcreateserial -out mosquitto-serv.crt -days 365 -sha256
 
 move certs to /usr/share/container/mosquitto/certs
+
+6. mosquitto_pub -p <port> -t "test" -cafile mosquitto-ca.crt -m "Hello MQTT" -d -h <host>
