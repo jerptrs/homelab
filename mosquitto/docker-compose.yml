@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  mosquitto:
+    hostname: ${HOSTNAME}
+    container_name: ${CONTAINER_NAME}
+    image: eclipse-mosquitto
+    restart: always
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - /usr/share/container/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /usr/share/container/mosquitto/data:/mosquitto/data
+      - /usr/share/container/mosquitto/data/certs:/mosquitto/data/certs
+      - /usr/share/container/mosquitto/log/mosquitto.log:/mosquitto/log/mosquitto.log
+    #labels:
+      #- traefik.http.routers.mosquitto.rule=Host(`${HOSTNAME}`)
+    env_file:
+      - ./.env
+    networks:
+      - reverse-proxy
+
+networks:
+  reverse-proxy:
+    name: reverse-proxy

@@ -1,25 +1,24 @@
-version: "3"
-
+version: "3.8"
 services:
   pihole:
     hostname: ${HOSTNAME}
-    container_name: pihole
+    container_name: ${CONTAINER_NAME}
     image: pihole/pihole:latest
+    restart: always
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 80:80/tcp
+    volumes:
+      - /usr/share/container/pihole/etc:/etc/pihole
+      - /usr/share/container/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    #labels:
+      #- traefik.http.routers.pihole.rule=Host(`${HOSTNAME}`)
     env_file:
       - ./.env
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "80:80/tcp"
-    volumes:
-      - '/container/pihole/etc:/etc/pihole'
-      - '/container/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'      
-    labels:
-      - "traefik.http.routers.homeassistant.rule=Host(`${HOSTNAME}`)"
-    restart: unless-stopped
     networks:
-      - traefik
+      - reverse-proxy
 
 networks:
-  traefik:
-    name: traefik
+  reverse-proxy:
+    name: reverse-proxy

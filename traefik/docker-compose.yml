@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   traefik:
-    hostname: ${HOSTNAME}
+    hostname: ${CONTAINER_HOSTNAME}
     container_name: traefik
     image: traefik:v2.6
     restart: always
@@ -10,7 +10,9 @@ services:
       - ./.env
     ports:
       - 8443:443
+      - 8081:8080
     command:
+      - --api.insecure=true
       - --providers.docker
       - --entrypoints.https.address=:443
       - --certificatesresolvers.letsencrypt.acme.email=${CLOUDFLARE_EMAIL}
@@ -24,6 +26,7 @@ services:
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.tls=true
       - traefik.http.routers.traefik.tls.certresolver=letsencrypt
+      - traefik.http.routers.traefik.rule=Host(`${CONTAINER_HOSTNAME}`)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /container/traefik/certs:/letsencrypt

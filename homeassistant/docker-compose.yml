@@ -1,23 +1,23 @@
-version: '3.8'
+version: "3.8"
 services:
   homeassistant:
     hostname: ${HOSTNAME}
-    container_name: homeassistant
-    image: "ghcr.io/home-assistant/home-assistant:stable"
+    container_name: ${CONTAINER_NAME}
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
     ports:
       - 8123:8123
     volumes:
-      - /container/homeassistant:/config
+      - /usr/share/container/home-assistant/home-assistant:/config
       - /etc/localtime:/etc/localtime:ro
+    #labels:
+    #  - traefik.http.routers.home-assistant.rule=Host(`${HOSTNAME}`)
     env_file:
       - ./.env
-    labels:
-      - "traefik.http.routers.homeassistant.rule=Host(`${HOSTNAME}`)"
-    restart: unless-stopped
-    privileged: true
     networks:
-      - traefik
-
+      - reverse-proxy
+    privileged: true
+    
 networks:
-  traefik:
-    name: traefik
+  reverse-proxy:
+    name: reverse-proxy
