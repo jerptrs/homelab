@@ -1,16 +1,13 @@
 version: "3"
 
 services:
-  synapse:
+  nextcloud:
     container_name: ${SERVICE}
     restart: unless-stopped
-    image: matrixdotorg/synapse:latest
+    image: nextcloud/all-in-one:latest-arm64
     volumes:
-      - /var/lib/container/matrix/data:/data
-    environment:
-      - SYNAPSE_SERVER_NAME=${DOMAIN}
-      - SYNAPSE_REPORT_STATS=no
-    #command: generate # needed to generate a config at first start.
+      - /var/lib/container/nextcloud/config:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)

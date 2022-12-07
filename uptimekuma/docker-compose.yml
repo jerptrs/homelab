@@ -1,16 +1,12 @@
 version: "3"
 
 services:
-  synapse:
+  uptimekuma:
     container_name: ${SERVICE}
     restart: unless-stopped
-    image: matrixdotorg/synapse:latest
+    image: louislam/uptime-kuma
     volumes:
-      - /var/lib/container/matrix/data:/data
-    environment:
-      - SYNAPSE_SERVER_NAME=${DOMAIN}
-      - SYNAPSE_REPORT_STATS=no
-    #command: generate # needed to generate a config at first start.
+      - /var/lib/container/uptimekuma:/app/data
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
