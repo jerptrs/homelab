@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:v2.6
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - CLOUDFLARE_EMAIL=$CLOUDFLARE_EMAIL
+      - CLOUDFLARE_DNS_API_TOKEN=$CLOUDFLARE_TOKEN
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - certs:/letsencrypt
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`$DOMAIN`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${SERVICE}.service=api@internal
+      - traefik.http.routers.${SERVICE}.middlewares=strip
+      - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
+      - traefik.http.routers.api.middlewares=authelia@docker
+      - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    command: 
+      - --providers.docker=true
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.letsencrypt.acme.email=$ACME_EMAIL
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.http.address=:80
+      - --entrypoints.http.http.redirections.entrypoint.to=https
+      - --entrypoints.http.http.redirections.entrypoint.scheme=https
+      #- '--entryPoints.http.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
+      #- '--entryPoints.http.proxyProtocol.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
+      - --entrypoints.https.address=:443
+      - --entrypoints.https.http.tls=true
+      - --entrypoints.https.http.tls.certResolver=letsencrypt
+      - --entrypoints.https.http.tls.domains[0].main=$DOMAIN
+      - --entrypoints.https.http.tls.domains[0].sans=*.$DOMAIN
+      #- '--entryPoints.https.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
+      #- '--entryPoints.https.proxyProtocol.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
+
+networks:
+  traefik:
+    name: traefik
+
+volumes:
+  certs:
+    name: certs
