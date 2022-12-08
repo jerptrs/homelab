@@ -75,8 +75,11 @@ services:
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=$PORT
 
     networks:
-      - proxy
-      - default
+      - traefik
+      - nextcloud
 networks:
-  proxy:
+  traefik:
     external: true
+  nextcloud:
+    external: true
+  
