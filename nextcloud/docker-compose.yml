@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nextcloud:
-    container_name: ${SERVICE}
+    container_name: nextcloud-aio-mastercontainer
     restart: unless-stopped
     image: nextcloud/all-in-one:latest-arm64
     volumes:

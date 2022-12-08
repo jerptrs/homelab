@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  observium-db:
+    container_name: ${SERVICE}-db
+    restart: unless-stopeed
+    image: mariadb
+    environment:
+      - TZ=Europe/Berlin
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    networks:
+      - observium
+    volumes:
+      - /var/lib/container/observium/db:/var/lib/mysql
+
+  observium:
+    container_name: ${SERVICE}
+    restart: unless-stopped
+    image: mbixtech/observium
+    volumes:
+      - /var/lib/container/observium/logs:/opt/observium/logs
+      - /var/lib/container/observium/rrd:/opt/observium/rrd
+    environment:
+      - TZ=Europe/Berlin
+      - OBSERVIUM_ADMIN_USER=${ADMIN_USER}
+      - OBSERVIUM_ADMIN_PASS=${ADMIN_PASS}
+      - OBSERVIUM_BASE_URL=${BASE_URL}
+      - OBSERVIUM_DB_HOST=${DB_HOST}
+      - OBSERVIUM_DB_NAME=${DB_NAME}
+      - OBSERVIUM_DB_USER=${DB_USER}
+      - OBSERVIUM_DB_PASS=${DB_PASS}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=$PORT
+    networks:
+      - traefik
+      - observium
+  
+networks:
+  traefik:
+    external: true
+  observium:
+    external: true
