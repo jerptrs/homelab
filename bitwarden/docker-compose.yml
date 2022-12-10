@@ -1,22 +1,21 @@
-version: '3'
-
+version: '3.8'
 services:
   bitwarden:
     container_name: ${SERVICE}
     image: vaultwarden/server:latest
     restart: unless-stopped
     volumes:
-       - /var/lib/container/bitwarden/data:/data
+      - /var/lib/container/bitwarden/data:/data
     networks:
-    - traefik
+      - traefik
     labels:
-    - traefik.enable=true
-    - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
-    - traefik.http.routers.${SERVICE}.entrypoints=https
-    - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-    - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-    - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
-       
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
+
 networks:
   traefik:
     name: traefik

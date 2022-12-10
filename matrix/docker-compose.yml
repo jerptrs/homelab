@@ -1,5 +1,4 @@
-version: "3"
-
+version: '3.8'
 services:
   synapse:
     container_name: ${SERVICE}
@@ -16,10 +15,10 @@ services:
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=$PORT
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
     networks:
       - traefik
-  
+
 networks:
   traefik:
     external: true
