@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.7
+    container_name: ${SERVICE}-mariadb
+    restart: unless-stopped
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+    volumes:
+      - linkace_mariadb:/var/lib/mysql
+    networks:
+      - linkace
+
+  app:
+    image: linkace/linkace:latest
+    container_name: ${SERVICE}
+    restart: unless-stopped
+    depends_on:
+      - linkace_db
+    volumes:
+      - /var/lib/container/linkace//backups:/app/storage/app/backups
+      - /var/lib/container/linkace/app:/app
+      - /var/lib/container/linkace/logs:/app/storage/logs
+    networks:
+      - traefik
+      - linkace
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+
+  redis:
+    container_name: ${SERVICE}-redis
+    image: bitnami/redis:6.2
+    restart: unless-stopped
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - linkace
+
+volumes:
+  linkace_mariadb:
+    driver: local
+
+networks:
+  traefik:
+    name: traefik
+  linkace:
+    name: linkace
