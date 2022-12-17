@@ -38,14 +38,14 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
 
-  redis:
-    container_name: ${SERVICE}-redis
-    image: bitnami/redis:6.2
-    restart: unless-stopped
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    networks:
-      - linkace
+  # redis:
+  #   container_name: ${SERVICE}-redis
+  #   image: bitnami/redis:6.2
+  #   restart: unless-stopped
+  #   environment:
+  #     - REDIS_PASSWORD=${REDIS_PASSWORD}
+  #   networks:
+  #     - linkace
 
 volumes:
   linkace_mariadb:
