@@ -9,8 +9,8 @@ services:
       - 53:53/udp
       - 3000:3000
     volumes:
-      - adguard_work:/opt/adguardhome/work
-      - adguard_conf:/opt/adguardhome/conf
+      - work:/opt/adguardhome/work
+      - conf:/opt/adguardhome/conf
     networks:
       - traefik
     labels:
