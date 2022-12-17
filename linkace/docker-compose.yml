@@ -25,8 +25,8 @@ services:
     depends_on:
       - db
     volumes:
+      - /var/lib/container/linkace/.env:/app/.env
       - /var/lib/container/linkace//backups:/app/storage/app/backups
-      - /var/lib/container/linkace/app:/app
       - /var/lib/container/linkace/logs:/app/storage/logs
     networks:
       - traefik
@@ -37,6 +37,15 @@ services:
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+
+  redis:
+    container_name: ${SERVICE}-redis
+    image: bitnami/redis:6.2
+    restart: unless-stopped
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - linkace
 
 volumes:
   linkace_mariadb:
