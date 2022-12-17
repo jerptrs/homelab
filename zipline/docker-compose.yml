@@ -1,39 +1,12 @@
 version: '3.8'
 services:
-  postgres:
-    container_name: ${SERVICE}-db
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-    volumes:
-      - /var/lib/container/zipline/postgresql:/var/lib/postgresql/data
-    healthcheck:
-      test: [ 'CMD-SHELL', 'pg_isready -U postgres' ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - zipline
-
   zipline:
-    image: ghcr.io/diced/zipline
     container_name: ${SERVICE}
-    restart: always
-    environment:
-      - CORE_HTTPS=false
-      - CORE_SECRET=${CORE_SECRET}
-      - CORE_HOST=0.0.0.0
-      - CORE_PORT=3000
-      - CORE_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DATABASE}/postgres
-      - CORE_LOGGER=true
+    image: ghcr.io/diced/zipline
+    restart: unless-stopped
     volumes:
-      - /var/lib/container/zipline/uploads:/zipline/uploads
-      - /var/lib/container/zipline/public:/public:/zipline/public
-    depends_on:
-      - postgres
+      - zipline_uploads:/zipline/uploads
+      - zipline_public:/public:/zipline/public
     networks:
       - traefik
       - zipline
@@ -43,6 +16,41 @@ services:
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    environment:
+      - CORE_HTTPS=false
+      - CORE_SECRET=${CORE_SECRET}
+      - CORE_HOST=0.0.0.0
+      - CORE_PORT=3000
+      - CORE_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DATABASE}/postgres
+      - CORE_LOGGER=true
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: ${SERVICE}-db
+    image: postgres
+    restart: unless-stopped
+    volumes:
+      - zipline_db:/var/lib/postgresql/data
+    networks:
+      - zipline
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U postgres' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  zipline_uploads:
+    driver: local
+  zipline_public:
+    driver: local
+  zipline_db:
+    driver: local
 
 networks:
   traefik:

@@ -1,58 +1,57 @@
-version: '3.8'
+version: "3.8"
 services:
   nextcloud-db:
-    image: mariadb
     container_name: ${SERVICE}-db
-    command: --transaction-isolation=READ-COMMITTED --log-bin=ROW --innodb_read_only_compressed=OFF
+    image: mariadb
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
       - nextcloud_database:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} #SQL root Passwort eingeben
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD} #SQL Benutzer Passwort eingeben
-      - MYSQL_DATABASE=${MYSQL_DATABASE} #Datenbank Name
-      - MYSQL_USER=${MYSQL_USER} #SQL Nutzername
-      - MYSQL_INITDB_SKIP_TZINFO=1
     networks:
       - nextcloud
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_INITDB_SKIP_TZINFO=1
+    command: --transaction-isolation=READ-COMMITTED --log-bin=ROW --innodb_read_only_compressed=OFF
 
   nextcloud-redis:
-    image: redis:alpine
     container_name: ${SERVICE}-redis
-    hostname: ${SERVICE}-redis
+    image: redis:alpine
+    restart: unless-stopped
     networks:
       - nextcloud
-    restart: unless-stopped
-    command: redis-server --requirepass ${REDIS_PASSWORD} # Redis Passwort eingeben
+    command: redis-server --requirepass ${REDIS_PASSWORD}
 
   nextcloud-app:
-    image: nextcloud
     container_name: ${SERVICE}-app
+    image: nextcloud
     restart: unless-stopped
-    depends_on:
-      - ${SERVICE}-db
-      - ${SERVICE}-redis
-    environment:
-      TRUSTED_PROXIES: 172.18.0.0/16
-      OVERWRITEPROTOCOL: https
-      OVERWRITECLIURL: https://${DOMAIN}
-      OVERWRITEHOST: ${DOMAIN}
-      REDIS_HOST: ${SERVICE}-redis
-      REDIS_HOST_PASSWORD: ${REDIS_PASSWORD} # Redis Passwort von oben wieder eingeben
     volumes:
-      - /var/lib/container/nextcloud/app:/var/www/html
-      - /var/lib/container/nextcloud/data:/var/www/html/data
+      - nextcloud_app:/var/www/html
+      - nextcloud_data:/var/www/html/data
+    networks:
+      - traefik
+      - nextcloud
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=$PORT
-    networks:
-      - traefik
-      - nextcloud
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    environment:
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      OVERWRITEPROTOCOL: https
+      OVERWRITECLIURL: https://${DOMAIN}
+      OVERWRITEHOST: ${DOMAIN}
+      REDIS_HOST: ${SERVICE}-redis
+      REDIS_HOST_PASSWORD: ${REDIS_PASSWORD}
+    depends_on:
+      - ${SERVICE}-db
+      - ${SERVICE}-redis
 
 networks:
   traefik:

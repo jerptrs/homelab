@@ -1,15 +1,13 @@
-version: '3.8'
+version: "3.8"
 services:
   authelia:
     container_name: ${SERVICE}
     image: docker.io/authelia/authelia:latest
     restart: unless-stopped
+    volumes:
+      - authelia:/config
     networks:
       - traefik
-    volumes:
-      - /var/lib/container/authelia/data/config:/config
-    environment:
-      TZ: ${TZ}
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
@@ -22,7 +20,12 @@ services:
       - traefik.http.middlewares.${SERVICE}-basic.forwardAuth.address=http://authelia:9091/api/verify?auth=basic
       - traefik.http.middlewares.${SERVICE}-basic.forwardAuth.trustForwardHeader=true
       - traefik.http.middlewares.${SERVICE}-basic.forwardAuth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email
+    environment:
+      TZ: ${TZ}
 
+volumes:
+  authelia:
+    driver: local
 networks:
   traefik:
     external: true

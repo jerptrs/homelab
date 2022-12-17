@@ -1,19 +1,15 @@
-version: '3.8'
+version: "3.8"
 services:
   traefik:
     container_name: traefik
     image: traefik:v2.6
-    restart: always
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
-    environment:
-      - TZ=Europe/Berlin
-      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
-      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - certs:/letsencrypt
+      - letsencrypt:/letsencrypt
     networks:
       - traefik
     labels:
@@ -27,6 +23,10 @@ services:
       - traefik.http.routers.api.middlewares=authelia@docker
       - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${TRAEFIK_PORT}
+    environment:
+      - TZ=Europe/Berlin
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
     command:
       - --providers.docker=true
       - --api.dashboard=true
@@ -38,20 +38,16 @@ services:
       - --entrypoints.http.address=${HTTP_PORT}
       - --entrypoints.http.http.redirections.entrypoint.to=https
       - --entrypoints.http.http.redirections.entrypoint.scheme=https
-      #- '--entryPoints.http.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
-      #- '--entryPoints.http.proxyProtocol.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
       - --entrypoints.https.address=${HTTPS_PORT}
       - --entrypoints.https.http.tls=true
       - --entrypoints.https.http.tls.certResolver=letsencrypt
       - --entrypoints.https.http.tls.domains[0].main=${DOMAIN}
       - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN}
-      #- '--entryPoints.https.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
-      #- '--entryPoints.https.proxyProtocol.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16'
 
+volumes:
+  letsencrypt:
+    driver: local
+    
 networks:
   traefik:
     name: traefik
-
-volumes:
-  certs:
-    name: certs

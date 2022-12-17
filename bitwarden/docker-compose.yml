@@ -1,11 +1,11 @@
-version: '3.8'
+version: "3.8"
 services:
   bitwarden:
     container_name: ${SERVICE}
     image: vaultwarden/server:latest
     restart: unless-stopped
     volumes:
-      - /var/lib/container/bitwarden/data:/data
+      - bitwarden:/data
     networks:
       - traefik
     labels:
@@ -15,6 +15,12 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
       - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
+    environment:
+      TZ: ${TZ}
+      
+volumes:
+  bitwarden:
+    driver: local
 
 networks:
   traefik:

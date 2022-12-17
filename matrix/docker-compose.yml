@@ -1,23 +1,27 @@
-version: '3.8'
+version: "3.8"
 services:
   synapse:
     container_name: ${SERVICE}
-    restart: unless-stopped
     image: matrixdotorg/synapse:latest
+    restart: unless-stopped
     volumes:
-      - /var/lib/container/matrix/data:/data
-    environment:
-      - SYNAPSE_SERVER_NAME=${DOMAIN}
-      - SYNAPSE_REPORT_STATS=no
+      - matrix:/data
     #command: generate # needed to generate a config at first start.
+    networks:
+      - traefik
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-    networks:
-      - traefik
+    environment:
+      - SYNAPSE_SERVER_NAME=${DOMAIN}
+      - SYNAPSE_REPORT_STATS=no
+
+volumes:
+  matrix:
+    driver: local
 
 networks:
   traefik:

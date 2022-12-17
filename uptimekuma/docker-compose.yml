@@ -1,21 +1,25 @@
-version: '3.8'
+version: "3.8"
 services:
-  uptimekuma:
+  uptime-kuma:
     container_name: ${SERVICE}
-    restart: unless-stopped
     image: louislam/uptime-kuma
+    restart: unless-stopped
     volumes:
-      - /var/lib/container/uptimekuma:/app/data
+      - uptime_kuma:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-    networks:
-      - traefik
 
+volumes:
+  uptime_kuma:
+    driver: local
+    
 networks:
   traefik:
     external: true

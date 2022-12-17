@@ -1,23 +1,26 @@
-version: '3.8'
+version: "3.8"
 services:
   homeassistant:
-    hostname: ${SERVICE}
     container_name: ${SERVICE}
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     volumes:
-      - /var/lib/container/home-assistant/home-assistant:/config
+      - home_assistant:/config
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-    networks:
-      - traefik
     privileged: true
 
+volumes:
+  home_assistant:
+    driver: local
+    
 networks:
   traefik:
     external: true
