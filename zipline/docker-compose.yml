@@ -21,7 +21,7 @@ services:
       - CORE_SECRET=${CORE_SECRET}
       - CORE_HOST=0.0.0.0
       - CORE_PORT=3000
-      - CORE_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DATABASE}/postgres
+      - CORE_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/postgres
       - CORE_LOGGER=true
     depends_on:
       - zipline-db
