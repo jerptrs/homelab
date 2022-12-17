@@ -13,6 +13,7 @@ services:
       - data:/gluetun
     environment:
       # See https://github.com/qdm12/gluetun/wiki
+      - SHADOWSOCKS=${SHADOWSOCKS}
       - VPN_SERVICE_PROVIDER=mullvad
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
