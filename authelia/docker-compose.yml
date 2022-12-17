@@ -14,7 +14,7 @@ services:
       - traefik.http.routers.${SERVICE}.entryPoints=https
       - traefik.http.routers.${SERVICE}.tls=true
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-      - traefik.http.middlewares.${SERVICE}.forwardAuth.address=http://authelia:9091/api/verify?rd=https%3A%2F%2F${ROOT_DOMAIN}%2F
+      - traefik.http.middlewares.${SERVICE}.forwardAuth.address=http://authelia:9091/api/verify?rd=https%3A%2F%2F${DOMAIN}%2F
       - traefik.http.middlewares.${SERVICE}.forwardAuth.trustForwardHeader=true
       - traefik.http.middlewares.${SERVICE}.forwardAuth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email
       - traefik.http.middlewares.${SERVICE}-basic.forwardAuth.address=http://authelia:9091/api/verify?auth=basic
