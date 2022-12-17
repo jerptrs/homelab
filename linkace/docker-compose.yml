@@ -17,11 +17,9 @@ services:
       - linkace
 
   app:
-    image: linkace/linkace:latest
+    image: linkace/linkace:simple
     container_name: ${SERVICE}
     restart: unless-stopped
-    ports:
-      - 9001:9000
     depends_on:
       - db
     volumes:
