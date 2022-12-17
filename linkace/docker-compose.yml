@@ -20,6 +20,8 @@ services:
     image: linkace/linkace:simple
     container_name: ${SERVICE}
     restart: unless-stopped
+    ports:
+      - 81:80
     depends_on:
       - db
     volumes:
