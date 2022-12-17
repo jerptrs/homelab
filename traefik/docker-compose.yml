@@ -28,6 +28,7 @@ services:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
     command:
+      - --log.level=${LOG_LEVEL}
       - --providers.docker=true
       - --api.dashboard=true
       - --api.insecure=true
