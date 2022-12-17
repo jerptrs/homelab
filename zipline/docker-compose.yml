@@ -24,7 +24,7 @@ services:
       - CORE_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DATABASE}/postgres
       - CORE_LOGGER=true
     depends_on:
-      - postgres
+      - zipline-db
 
   zipline-db:
     container_name: ${SERVICE}-db
