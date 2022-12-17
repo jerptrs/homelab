@@ -21,7 +21,7 @@ services:
     container_name: ${SERVICE}
     restart: unless-stopped
     depends_on:
-      - linkace_db
+      - db
     volumes:
       - /var/lib/container/linkace//backups:/app/storage/app/backups
       - /var/lib/container/linkace/app:/app
