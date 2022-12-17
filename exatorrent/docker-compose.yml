@@ -1,0 +1,30 @@
+#docker run -p 5000:5000 -p 42069:42069 -v /path/to/directory:/exa/exadir ghcr.io/varbhat/exatorrent:latest
+version: "3.8"
+services:
+  exatorrent:
+    container_name: ${SERVICE}
+    image: ghcr.io/varbhat/exatorrent:latest
+    restart: unless-stopped
+    ports:
+      - 42069:42069
+    volumes:
+      - data
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
+    environment:
+      TZ: ${TZ}
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  traefik:
+    name: traefik
