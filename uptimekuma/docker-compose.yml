@@ -5,7 +5,7 @@ services:
     image: louislam/uptime-kuma
     restart: unless-stopped
     volumes:
-      - uptime_kuma:/app/data
+      - data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - traefik
@@ -17,7 +17,7 @@ services:
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
 
 volumes:
-  uptime_kuma:
+  data:
     driver: local
     
 networks:

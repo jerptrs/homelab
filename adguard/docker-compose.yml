@@ -24,9 +24,9 @@ services:
       TZ: ${TZ}
 
 volumes:
-  adguard_work:
+  work:
     driver: local
-  adguard_conf:
+  conf:
     driver: local
 
 networks:

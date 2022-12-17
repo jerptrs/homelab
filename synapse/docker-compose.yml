@@ -5,7 +5,7 @@ services:
     image: matrixdotorg/synapse:latest
     restart: unless-stopped
     volumes:
-      - matrix:/data
+      - data:/data
     #command: generate # needed to generate a config at first start.
     networks:
       - traefik
@@ -20,7 +20,7 @@ services:
       - SYNAPSE_REPORT_STATS=no
 
 volumes:
-  matrix:
+  data:
     driver: local
 
 networks:

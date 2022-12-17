@@ -5,7 +5,7 @@ services:
     image: vaultwarden/server:latest
     restart: unless-stopped
     volumes:
-      - bitwarden:/data
+      - data:/data
     networks:
       - traefik
     labels:
@@ -19,7 +19,7 @@ services:
       TZ: ${TZ}
       
 volumes:
-  bitwarden:
+  data:
     driver: local
 
 networks:

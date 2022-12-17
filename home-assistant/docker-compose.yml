@@ -5,7 +5,7 @@ services:
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     volumes:
-      - home_assistant:/config
+      - config:/config
       - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
@@ -18,7 +18,7 @@ services:
     privileged: true
 
 volumes:
-  home_assistant:
+  config:
     driver: local
     
 networks:
