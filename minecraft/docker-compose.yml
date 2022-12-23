@@ -16,6 +16,8 @@ services:
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.tcp.routers.${SERVICE}.entrypoints=minecraft
       - traefik.tcp.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.udp.routers.${SERVICE}.entrypoints=minecraft
+      - traefik.udp.services.${SERVICE}.loadbalancer.server.port=${PORT}
     stdin_open: true
     tty: true
     networks:
