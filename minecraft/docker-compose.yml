@@ -3,7 +3,7 @@ services:
   minecraft:
     image: "marctv/minecraft-papermc-server:latest"
     restart: always
-    container_name: "mcserver"
+    container_name: ${SERVICE}
     environment:
       MEMORYSIZE: "4G"
       PAPERMC_FLAGS: ""
