@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backup:
+    image: offen/docker-volume-backup:latest
+    restart: always
+    environment:
+      BACKUP_FILENAME: backup-%Y-%m-%dT%H-%M-%S.tar.gz
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+      GPG_PASSPHRASE: ""
+    volumes:
+      - adguard_conf:/backup/adguard_conf:ro
+      - adguard_work:/backup/adguard_work:ro
+      - authelia_config:/backup/authelia_config:ro
+      - zipline_uploads:/backup/zipline_uploads:ro
+      - zipline_data:/backup/zipline_data:ro
+      - zipline_public:/backup/zipline_public:ro
+      - uptimekuma_data:/backup/uptimekuma_data:ro
+      - traefik_letsencrypt:/backup/traefik_letsencrypt:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/volume-backup:/archive
+
+volumes:
+  adguard_conf:
+    external: true
+  adguard_work:
+    external: true
+  authelia_config:
+    external: true
+  zipline_uploads:
+    external: true
+  zipline_data:
+    external: true
+  zipline_public:
+    external: true
+  uptimekuma_data:
+    external: true
+  traefik_letsencrypt:
+    external: true

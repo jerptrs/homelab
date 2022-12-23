@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  minecraft:
+    image: "marctv/minecraft-papermc-server:latest"
+    restart: always
+    container_name: "mcserver"
+    environment:
+      MEMORYSIZE: "4G"
+      PAPERMC_FLAGS: ""
+    volumes:
+      - data:/data:rw
+    #ports:
+    #  - "25565:25565"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.tcp.routers.${SERVICE}.entrypoints=minecraft
+      - traefik.tcp.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    stdin_open: true
+    tty: true
+    networks:
+      - traefik
+    
+volumes:
+  data:
+    driver: local
+  
+networks:
+  traefik:
+    external: true

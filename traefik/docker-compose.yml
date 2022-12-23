@@ -7,6 +7,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 25565:25565
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt
@@ -36,10 +37,14 @@ services:
       - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
       - --certificatesresolvers.letsencrypt.acme.email=$ACME_EMAIL
       - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      # http
       - --entrypoints.http.address=:${HTTP_PORT}
       - --entrypoints.http.http.redirections.entrypoint.to=https
-      - --entrypoints.http.http.redirections.entrypoint.scheme=https
+      # https
       - --entrypoints.https.address=:${HTTPS_PORT}
+      - --entrypoints.http.http.redirections.entrypoint.scheme=https
+      # minecraft
+      - --entrypoints.minecraft.address=:${MINECRAFT_PORT}
       - --entrypoints.https.http.tls=true
       - --entrypoints.https.http.tls.certResolver=letsencrypt
       - --entrypoints.https.http.tls.domains[0].main=${DOMAIN}
