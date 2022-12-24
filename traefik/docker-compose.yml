@@ -7,8 +7,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 25565:25565
-      - 25565:25565/udp
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt
@@ -24,7 +22,7 @@ services:
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
       - traefik.http.routers.api.middlewares=authelia@docker
       - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${TRAEFIK_PORT}
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=8080
     environment:
       - TZ=Europe/Berlin
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
@@ -44,8 +42,6 @@ services:
       # https
       - --entrypoints.https.address=:${HTTPS_PORT}
       - --entrypoints.http.http.redirections.entrypoint.scheme=https
-      # minecraft
-      - --entrypoints.minecraft.address=:${MINECRAFT_PORT}
       - --entrypoints.https.http.tls=true
       - --entrypoints.https.http.tls.certResolver=letsencrypt
       - --entrypoints.https.http.tls.domains[0].main=${DOMAIN}
