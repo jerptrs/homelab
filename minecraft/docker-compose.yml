@@ -2,7 +2,7 @@ version: "3.9"
 services:
   minecraft:
     image: "marctv/minecraft-papermc-server:latest"
-    restart: always
+    restart: unless-stopped
     container_name: ${SERVICE}
     environment:
       MEMORYSIZE: "4G"
@@ -10,16 +10,22 @@ services:
     volumes:
       - data:/data:rw
     ports:
-     - "25565:25565"
+     - 25565:25565
     stdin_open: true
     tty: true
     networks:
-      - minecraft
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DYNMAP_DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${DYNMAP_PORT}
     
 volumes:
   data:
     driver: local
   
 networks:
-  minecraft:
+  traefik:
     external: true
