@@ -8,8 +8,10 @@ services:
       - config:/config
       - /etc/localtime:/etc/localtime:ro
       - /dev/ttyUSB0:/dev/ttyUSB0
-    networks:
-      - traefik
+    # networks:
+    #   - traefik
+    ports:
+      - 8123:8123
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
@@ -22,6 +24,6 @@ volumes:
   config:
     driver: local
     
-networks:
-  traefik:
-    external: true
+# networks:
+#   traefik:
+#     external: true
