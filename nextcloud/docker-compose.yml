@@ -7,7 +7,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - nextcloud_database:/var/lib/mysql
+      - database:/var/lib/mysql
     networks:
       - nextcloud
     environment:
@@ -31,8 +31,8 @@ services:
     image: nextcloud
     restart: unless-stopped
     volumes:
-      - nextcloud_app:/var/www/html
-      - nextcloud_data:/var/www/html/data
+      - app:/var/www/html
+      - data:/var/www/html/data
     networks:
       - traefik
       - nextcloud
@@ -60,5 +60,9 @@ networks:
     external: true
 
 volumes:
-  nextcloud_database:
-    name: nextcloud_database
+  database:
+    name: database
+  app:
+    name: app
+  data:
+    name: data
