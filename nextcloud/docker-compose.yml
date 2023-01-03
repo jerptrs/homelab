@@ -5,11 +5,11 @@ services:
     image: mariadb
     restart: unless-stopped
     volumes:
-      - /etc/timezone:/etc/timezone:ro
       - database:/var/lib/mysql
     networks:
       - nextcloud
     environment:
+      - TZ=${TZ}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
