@@ -29,6 +29,8 @@ services:
     container_name: ${SERVICE}-app
     image: nextcloud
     restart: unless-stopped
+    ports:
+      - 8080:80
     volumes:
       - app:/var/www/html
       - data:/var/www/html/data
