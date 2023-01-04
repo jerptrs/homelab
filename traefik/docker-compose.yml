@@ -46,6 +46,11 @@ services:
       - --entrypoints.https.http.tls.certResolver=letsencrypt
       - --entrypoints.https.http.tls.domains[0].main=${DOMAIN}
       - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN}
+      # authelia
+      - --entryPoints.http.forwardedHeaders.insecure=false
+      - --entryPoints.http.proxyProtocol.insecure=false
+      - --entryPoints.https.forwardedHeaders.insecure=false
+      - --entryPoints.https.proxyProtocol.insecure=false
 
 volumes:
   letsencrypt:
