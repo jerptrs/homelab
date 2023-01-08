@@ -27,3 +27,5 @@ volumes:
 networks:
   traefik:
     external: true
+  influxdb:
+    external: true
