@@ -8,9 +8,10 @@ services:
       - data:/var/lib/influxdb2
     networks:
       - traefik
-      #- influxdb
+      - influxdb
     labels:
       - traefik.enable=true
+      - traefik.docker.network=traefik
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
