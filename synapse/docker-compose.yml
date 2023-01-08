@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - data:/data
-    #command: generate # needed to generate a config at first start.
+    command: generate # needed to generate a config at first start.
     networks:
       - traefik
     labels:
