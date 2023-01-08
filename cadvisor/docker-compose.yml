@@ -2,7 +2,7 @@ version: "3.8"
 services:
   adguard:
     container_name: ${SERVICE}
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
     restart: unless-stopped
     volumes:
       - /:/rootfs:ro
