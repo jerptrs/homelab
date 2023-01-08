@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  influxdb:
+    container_name: ${SERVICE}
+    image: influxdb:latest
+    restart: unless-stopped
+    ports:
+      - 8086:8086
+    volumes:
+      - data:/var/lib/influxdb2
+    networks:
+      - traefik
+      - influxdb
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    environment:
+      TZ: ${TZ}
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  traefik:
+    external: true
