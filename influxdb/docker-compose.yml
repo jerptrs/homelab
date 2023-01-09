@@ -34,7 +34,7 @@ services:
       - HOST_VAR=/hostfs/var
       - HOST_RUN=/hostfs/run
       - HOST_MOUNT_PREFIX=/hostfs
-    user: telegraf:988
+    #user: telegraf:988
 
 volumes:
   data:
