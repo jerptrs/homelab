@@ -20,32 +20,10 @@ services:
     environment:
       TZ: ${TZ}
 
-  telegraf:
-    container_name: ${SERVICE}-telegraf
-    image: telegraf:alpine
-    volumes:
-      - telegraf_data:/etc/telegraf
-      - /:/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - TZ=${TZ}
-      - HOST_ETC=/hostfs/etc
-      - HOST_PROC=/hostfs/proc
-      - HOST_SYS=/hostfs/sys
-      - HOST_VAR=/hostfs/var
-      - HOST_RUN=/hostfs/run
-      - HOST_MOUNT_PREFIX=/hostfs
-      - INFLUX_TOKEN=${INFLUX_TOKEN}
-      - INFLUX_HOST=${INFLUX_HOST}
-      - INFLUX_ORG=${INFLUX_ORG}
-    user: telegraf:988
-
 volumes:
   data:
     driver: local
   config:
-    driver: local
-  telegraf_data:
     driver: local
 
 networks:
