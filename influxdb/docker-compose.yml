@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - data:/var/lib/influxdb2
-      - config::/etc/influxdb2
+      - config:/etc/influxdb2
     networks:
       - traefik
       - influxdb
