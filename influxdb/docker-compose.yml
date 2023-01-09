@@ -6,6 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - data:/var/lib/influxdb2
+      - config::/etc/influxdb2
     networks:
       - traefik
       - influxdb
@@ -33,11 +34,13 @@ services:
       - HOST_SYS=/hostfs/sys
       - HOST_VAR=/hostfs/var
       - HOST_RUN=/hostfs/run
-      - HOST_MOUNT_PREFIX=/hostfs
+      #- HOST_MOUNT_PREFIX=/hostfs
     user: telegraf:988
 
 volumes:
   data:
+    driver: local
+  config:
     driver: local
   telegraf_data:
     driver: local
