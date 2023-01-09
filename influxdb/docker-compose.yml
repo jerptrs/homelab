@@ -25,7 +25,10 @@ services:
     image: telegraf:alpine
     volumes:
       - telegraf_data:/etc/telegraf
-      - /:/host:ro
+      - /:/hostfs:ro
+      - /etc:/hostfs/etc:ro
+      - /proc:/hostfs/proc:ro
+      - /sys:/hostfs/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=${TZ}
