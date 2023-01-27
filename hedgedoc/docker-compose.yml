@@ -1,0 +1,48 @@
+version: '3'
+services:
+  database:
+    image: postgres:13.4-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - database:/var/lib/postgresql/data
+    restart: unless-stopeed
+    networks:
+      - hedgedoc
+
+  hedgedoc:
+    image: quay.io/hedgedoc/hedgedoc:1.9.6
+    environment:
+      - CMD_DB_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/hedgedoc
+      - CMD_DOMAIN=localhost
+      - CMD_URL_ADDPORT=true
+      - TZ=${TZ}
+    volumes:
+      - uploads:/hedgedoc/public/uploads
+    restart: unless-stopped
+    depends_on:
+      - database
+    networks:
+      - traefik
+      - hedgedoc
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+
+volumes:
+  database:
+    driver: local
+  uploads:
+    driver: local
+
+networks:
+  traefik:
+    external: true
+  hedgedoc:
+    external: true
