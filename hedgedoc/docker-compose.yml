@@ -1,6 +1,7 @@
 version: '3'
 services:
   database:
+    container_name: ${SERVICE}-db
     image: postgres:13.4-alpine
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -13,6 +14,7 @@ services:
       - hedgedoc
 
   hedgedoc:
+    container_name: ${SERVICE}
     image: quay.io/hedgedoc/hedgedoc:1.9.6
     environment:
       - CMD_DB_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/hedgedoc
