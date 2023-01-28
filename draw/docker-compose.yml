@@ -1,0 +1,22 @@
+#docker run -it --rm --name="draw" -p 8080:8080 -p 8443:8443 jgraph/drawio
+version: "3.8"
+services:
+  adguard:
+    container_name: ${SERVICE}
+    image: jgraph/drawio
+    restart: unless-stopped
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    environment:
+      TZ: ${TZ}
+
+networks:
+  traefik:
+    external: true
