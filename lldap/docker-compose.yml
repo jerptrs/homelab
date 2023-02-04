@@ -9,8 +9,8 @@ services:
     volumes:
       - data:/data
     environment:
-      - UID=####
-      - GID=####
+      #- UID=####
+      #- GID=####
       - TZ=${TZ}
       - LLDAP_JWT_SECRET=${LLDAP_JWT_SECRET}
       - LLDAP_LDAP_USER_PASS=${LLDAP_LDAP_USER_PASS}
