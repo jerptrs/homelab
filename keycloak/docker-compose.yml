@@ -28,7 +28,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     depends_on:
       - db
-    command: start --optimized
+    command: start --optimized --verbose
 
   db:
     container_name: ${SERVICE}-db
