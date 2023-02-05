@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  authelia:
+    container_name: ${SERVICE}
+    image: docker.io/authelia/authelia:latest
+    restart: unless-stopped
+    volumes:
+      - config:/config
+    networks:
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.http.routers.${SERVICE}.rule: Host(`${DOMAIN}`)
+      traefik.http.routers.${SERVICE}.entryPoints: https
+      traefik.http.routers.${SERVICE}.tls: true
+      traefik.http.services.${SERVICE}.loadbalancer.server.port: ${PORT}
+      traefik.docker.network: traefik
+      traefik.http.middlewares.${SERVICE}.forwardAuth.address: http://authelia:9091/api/verify?rd=https%3A%2F%2F${DOMAIN}%2F
+      traefik.http.middlewares.${SERVICE}.forwardAuth.trustForwardHeader: true
+      traefik.http.middlewares.${SERVICE}.forwardAuth.authResponseHeaders: Remote-User,Remote-Groups,Remote-Name,Remote-Email
+      traefik.http.middlewares.${SERVICE}-basic.forwardAuth.address: http://authelia:9091/api/verify?auth=basic
+      traefik.http.middlewares.${SERVICE}-basic.forwardAuth.trustForwardHeader: true
+      traefik.http.middlewares.${SERVICE}-basic.forwardAuth.authResponseHeaders: Remote-User,Remote-Groups,Remote-Name,Remote-Email
+    environment:
+      TZ: ${TZ}
+
+volumes:
+  config:
+    driver: local
+
+networks:
+  traefik:
+    external: true

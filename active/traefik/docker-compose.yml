@@ -13,20 +13,20 @@ services:
     networks:
       - traefik
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.${SERVICE}.rule=Host(`${TRAEFIK_DOMAIN}`)
-      - traefik.http.routers.${SERVICE}.entrypoints=https
-      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.routers.${SERVICE}.service=api@internal
-      - traefik.http.routers.${SERVICE}.middlewares=strip
-      - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
-      - traefik.http.routers.api.middlewares=authelia@docker
-      - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=8080
+      traefik.enable: true
+      traefik.http.routers.${SERVICE}.rule: Host(`${TRAEFIK_DOMAIN}`)
+      traefik.http.routers.${SERVICE}.entrypoints: https
+      traefik.http.routers.${SERVICE}.tls.certresolver: letsencrypt
+      traefik.http.routers.${SERVICE}.service: api@internal
+      traefik.http.routers.${SERVICE}.middlewares: strip
+      traefik.http.middlewares.strip.stripprefix.prefixes: /traefik
+      traefik.http.routers.api.middlewares: authelia@docker
+      traefik.http.routers.${SERVICE}.middlewares: authelia@docker
+      traefik.http.services.${SERVICE}.loadbalancer.server.port: 8080
     environment:
-      - TZ=Europe/Berlin
-      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
-      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
+      TZ: Europe/Berlin
+      CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL}
+      CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_TOKEN}
     command:
       - --log.level=${LOG_LEVEL}
       - --providers.docker=true

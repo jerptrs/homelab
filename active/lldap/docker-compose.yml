@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  lldap:
+    container_name: ${SERVICE}
+    image: nitnelave/lldap:stable
+    ports:
+      - 3890:3890
+    volumes:
+      - data:/data
+    environment:
+      TZ: ${TZ}
+      LLDAP_JWT_SECRET: ${LLDAP_JWT_SECRET}
+      LLDAP_LDAP_USER_PASS: ${LLDAP_LDAP_USER_PASS}
+      LLDAP_LDAP_BASE_DN: ${LLDAP_LDAP_BASE_DN}
+    networks:
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.${SERVICE}.rule: Host(`${DOMAIN}`)
+      traefik.http.routers.${SERVICE}.entrypoints: https
+      traefik.http.routers.${SERVICE}.tls.certresolver: letsencrypt
+      traefik.http.services.${SERVICE}.loadbalancer.server.port: ${PORT}
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  traefik:
+    external: true

@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   adguard:
     container_name: ${SERVICE}
@@ -14,12 +15,12 @@ services:
     networks:
       - traefik
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
-      - traefik.http.routers.${SERVICE}.entrypoints=https
-      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-      - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
+      traefik.enable: true
+      traefik.http.routers.${SERVICE}.rule: Host(`${DOMAIN}`)
+      traefik.http.routers.${SERVICE}.entrypoints: https
+      traefik.http.routers.${SERVICE}.tls.certresolver: letsencrypt
+      traefik.http.services.${SERVICE}.loadbalancer.server.port: ${PORT}
+      traefik.http.routers.${SERVICE}.middlewares: authelia@docker
     environment:
       TZ: ${TZ}
 
@@ -31,4 +32,4 @@ volumes:
 
 networks:
   traefik:
-    name: traefik
+    external: true
