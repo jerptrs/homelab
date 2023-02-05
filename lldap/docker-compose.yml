@@ -2,6 +2,7 @@ version: "3"
 
 services:
   lldap:
+    container_name: ${SERVICE}
     image: nitnelave/lldap:stable
     ports:
       # For LDAP
