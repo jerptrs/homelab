@@ -26,6 +26,7 @@ services:
       DB_PASSWORD: ${POSTGRESQL_PASS}
     depends_on:
       - db
+    command: start --optimized
 
   db:
     container_name: ${SERVICE}-db
