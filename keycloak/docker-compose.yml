@@ -1,0 +1,54 @@
+#docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:20.0.3 start-dev
+version: "3.8"
+services:
+  keycloak:
+    container_name: ${SERVICE}
+    image: quay.io/keycloak/keycloak:20.0.3
+    restart: unless-stopped
+    volumes:
+      - data:/opt/keycloak
+    networks:
+      - traefik
+      - keycloak
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    environment:
+      TZ: ${TZ}
+      DB_VENDOR: ${DB_VENDOR}
+      DB_ADDR: ${DB_ADDR}
+      DB_DATABASE: ${POSTGRESQL_DB}
+      DB_USER: ${POSTGRESQL_USER}
+      DB_PASSWORD: ${POSTGRESQL_PASS}
+    depends_on:
+      - db
+
+  db:
+    container_name: ${SERVICE}-db
+    image: postgres:13.2
+    restart: unless-stopped
+    volumes:
+      - db:/opt/keycloak
+    networks:
+      - keycloak
+    environment:
+      POSTGRES_DB: ${POSTGRESQL_DB}
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
+      TZ: ${TZ}
+
+volumes:
+  data:
+    driver: local
+  db:
+    driver: local
+
+networks:
+  traefik:
+    external: true
+  keycloak:
+    external: true
