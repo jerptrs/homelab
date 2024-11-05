@@ -1,8 +1,7 @@
-version: "3.8"
 services:
   traefik:
     container_name: traefik
-    image: traefik:v2.6
+    image: traefik:v3.2
     restart: unless-stopped
     ports:
       - 80:80
@@ -20,11 +19,9 @@ services:
       - traefik.http.routers.${SERVICE}.service=api@internal
       - traefik.http.routers.${SERVICE}.middlewares=strip
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
-      - traefik.http.routers.api.middlewares=authelia@docker
-      - traefik.http.routers.${SERVICE}.middlewares=authelia@docker
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=8080
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TZ}
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
     command:
@@ -34,7 +31,7 @@ services:
       - --api.insecure=true
       - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
       - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
-      - --certificatesresolvers.letsencrypt.acme.email=$ACME_EMAIL
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
       - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
       # http
       - --entrypoints.http.address=:${HTTP_PORT}
@@ -44,13 +41,10 @@ services:
       - --entrypoints.http.http.redirections.entrypoint.scheme=https
       - --entrypoints.https.http.tls=true
       - --entrypoints.https.http.tls.certResolver=letsencrypt
-      - --entrypoints.https.http.tls.domains[0].main=${DOMAIN}
-      - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN}
-      # authelia
-      - --entryPoints.http.forwardedHeaders.insecure=false
-      - --entryPoints.http.proxyProtocol.insecure=false
-      - --entryPoints.https.forwardedHeaders.insecure=false
-      - --entryPoints.https.proxyProtocol.insecure=false
+      - --entrypoints.https.http.tls.domains[0].main=${DOMAIN0}
+      - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN0}
+      - --entrypoints.https.http.tls.domains[1].main=${DOMAIN1}
+      - --entrypoints.https.http.tls.domains[1].sans=*.${DOMAIN1}
 
 volumes:
   letsencrypt:

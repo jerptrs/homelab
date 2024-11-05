@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   homeassistant:
     container_name: ${SERVICE}
@@ -8,7 +6,6 @@ services:
     volumes:
       - config:/config
       - /etc/localtime:/etc/localtime:ro
-      - /dev/ttyUSB0:/dev/ttyUSB0
     networks:
        - traefik
     labels:
