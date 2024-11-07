@@ -13,11 +13,11 @@ services:
     networks:
       - traefik
     labels:
-      traefik.enable: true
-      traefik.http.routers.${SERVICE}.rule: Host(`${DOMAIN}`)
-      traefik.http.routers.${SERVICE}.entrypoints: https
-      traefik.http.routers.${SERVICE}.tls.certresolver: letsencrypt
-      traefik.http.services.${SERVICE}.loadbalancer.server.port: ${PORT}
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
     environment:
       TZ: ${TZ}
 
