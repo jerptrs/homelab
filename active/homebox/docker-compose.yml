@@ -1,14 +1,14 @@
 services:
   homebox:
     image: ghcr.io/hay-kot/homebox:latest
-    container_name: homebox
-    restart: always
-    environment:
-    - HBOX_LOG_LEVEL=info
-    - HBOX_LOG_FORMAT=text
-    - HBOX_WEB_MAX_UPLOAD_SIZE=10
+    container_name: ${SERVICE}
+    restart: unless-stopped
+    ports:
+      - 7745:7745
     volumes:
       - data:/data/
+    networks:
+      - traefik
     labels:
       traefik.enable: true
       traefik.http.routers.${SERVICE}.rule: Host(`${DOMAIN}`)
@@ -16,6 +16,10 @@ services:
       traefik.http.routers.${SERVICE}.tls.certresolver: letsencrypt
       traefik.http.services.${SERVICE}.loadbalancer.server.port: ${PORT}
       traefik.docker.network: traefik
+    environment:
+    - HBOX_LOG_LEVEL=${LOG_LEVEL}
+    - HBOX_LOG_FORMAT=text
+    - HBOX_WEB_MAX_UPLOAD_SIZE=10
 
 volumes:
    data:
