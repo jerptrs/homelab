@@ -16,6 +16,7 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
       - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
     environment:
     - HBOX_LOG_LEVEL=${LOG_LEVEL}
     - HBOX_LOG_FORMAT=text

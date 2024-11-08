@@ -18,6 +18,7 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
       - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
     environment:
       - ES_URL=http://archivist-es:9200
       - REDIS_HOST=archivist-redis
