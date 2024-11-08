@@ -26,8 +26,14 @@ services:
     image: redis:bookworm
     container_name: ${SERVICE}-redis
     restart: unless-stopped
+    volumes:
+      - redis:/data
     networks:
       - onetimesecret
+
+volumes:
+   redis:
+     driver: local
 
 networks:
   traefik:
