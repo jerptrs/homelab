@@ -19,6 +19,8 @@ services:
       # Size limit for a single note.
       - SIZE_LIMIT=4 MiB
       - REDIS=redis://cryptgeon-redis:6379/0
+      - MAX_VIEWS=${MAX_VIEWS}
+      - MAX_EXPIRATION=${MAX_EXPIRATION}
     depends_on:
       - cryptgeon-redis
     healthcheck:
