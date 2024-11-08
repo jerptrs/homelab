@@ -25,6 +25,7 @@ services:
   onetimesecret-redis:
     image: redis:bookworm
     container_name: ${SERVICE}-redis
+    restart: unless-stopped
     networks:
       - onetimesecret
 
