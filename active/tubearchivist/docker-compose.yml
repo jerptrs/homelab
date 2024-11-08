@@ -87,3 +87,5 @@ volumes:
 networks:
   traefik:
     external: true
+  tubearchivist:
+    name: tubearchivist
