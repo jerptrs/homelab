@@ -14,7 +14,8 @@ services:
       - traefik.docker.network=traefik
     environment:
       # Size limit for a single note.
-      SIZE_LIMIT: 4 MiB
+      - SIZE_LIMIT=4 MiB
+      - REDIS=redis://${SERVICE}-redis:6379/0
     depends_on:
       - cryptgeon-redis
     healthcheck:
