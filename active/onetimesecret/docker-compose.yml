@@ -24,6 +24,7 @@ services:
 
   onetimesecret-redis:
     image: redis:bookworm
+    container_name: ${SERVICE}-redis
     networks:
       - onetimesecret
 
