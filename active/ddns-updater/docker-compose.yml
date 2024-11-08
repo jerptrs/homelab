@@ -1,7 +1,7 @@
 services:
   ddns-updater:
     container_name: ${SERVICE}
-    image: qmcgaw/ddns-updater
+    image: qmcgaw/ddns-updater:latest
     restart: always
     ports:
       - 8000:8000
