@@ -4,7 +4,7 @@ services:
     image: qmcgaw/ddns-updater:latest
     restart: always
     ports:
-      - 8000:8000
+      - ${INT_PORT}:8000
     volumes:
       - data:/updater/data
     networks:

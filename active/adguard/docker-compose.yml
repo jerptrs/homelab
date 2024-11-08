@@ -6,7 +6,7 @@ services:
     ports:
       - 53:53/tcp
       - 53:53/udp
-      - 3000:3000/tcp
+      - ${INT_PORT}:3000/tcp
     volumes:
       - work:/opt/adguardhome/work
       - conf:/opt/adguardhome/conf

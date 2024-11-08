@@ -4,7 +4,7 @@ services:
     container_name: ${SERVICE}
     restart: unless-stopped
     ports:
-      - 8001:8000
+      - ${INT_PORT}:8000
     volumes:
       - ${STORAGE_PATH}:/youtube
       - cache:/cache
