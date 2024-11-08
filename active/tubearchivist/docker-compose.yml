@@ -1,12 +1,10 @@
-version: '3.5'
-
 services:
   tubearchivist:
     image: bbilly1/tubearchivist:latest
     container_name: ${SERVICE}
     restart: unless-stopped
     ports:
-      - 8000:8000
+      - 8001:8000
     volumes:
       - ${STORAGE_PATH}:/youtube
       - cache:/cache
