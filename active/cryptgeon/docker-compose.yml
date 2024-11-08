@@ -2,7 +2,7 @@ services:
   cryptgeon:
     image: cupcakearmy/cryptgeon:latest
     container_name: ${SERVICE}
-    restart: unless-stopeed
+    restart: unless-stopped
     ports:
       - ${INT_PORT}:8000
     labels:
