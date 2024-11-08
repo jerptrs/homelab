@@ -4,7 +4,7 @@ services:
     container_name: ${SERVICE}
     restart: unless-stopped
     ports:
-      - 3001:3000
+      - ${INT_PORT}:3000
     networks:
       - traefik
       - onetimesecret
