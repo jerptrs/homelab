@@ -21,7 +21,7 @@ services:
       - traefik.http.routers.${SERVICE}.middlewares=strip
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=8080
-      - traefik.http.middlewares.local-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7
+      - traefik.http.middlewares.local-ipwhitelist.ipwhitelist.sourcerange=10.0.0.1
     environment:
       - TZ=${TZ}
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
