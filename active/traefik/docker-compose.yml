@@ -22,6 +22,7 @@ services:
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=8080
       - traefik.http.middlewares.local-ipallowlist.IPAllowList.sourcerange=${SOURCERANGE}
+      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
     environment:
       - TZ=${TZ}
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
