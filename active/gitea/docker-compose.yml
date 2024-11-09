@@ -1,0 +1,58 @@
+services:
+  gitea:
+    container_name: ${SERVICE}
+    image: gitea/gitea:1.22.3
+    restart: unless-stopped
+    ports:
+      - 2222:2222
+    volumes:
+      - data:/var/lib/gitea
+      - config:/etc/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik
+      - database
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
+    environment:
+      - GITEA__database__DB_TYPE=mysql
+      - GITEA__database__HOST=db:3306
+      - GITEA__database__NAME=${DB_NAME}
+      - GITEA__database__USER=${DB_USER}
+      - GITEA__database__PASSWD=${DB_PASSWORD}
+    depends_on:
+      - db
+
+  db:
+    container_name: ${SERVICE}-db
+    image: mysql:8
+    restart: unless-stopped
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - database
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+
+volumes:
+  data:
+    driver: local
+  config:
+    driver: local
+  database:
+    driver: local
+
+networks:
+  traefik:
+    external: true
+  database:
+    external: true
