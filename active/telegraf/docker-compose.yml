@@ -1,7 +1,7 @@
 services:
   telegraf:
     container_name: ${SERVICE}
-    image: telegraf:alpine
+    image: telegraf:latest
     volumes:
       - data:/etc/telegraf
       - /:/hostfs:ro
