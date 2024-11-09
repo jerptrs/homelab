@@ -1,0 +1,28 @@
+services:
+  heimdall:
+    container_name: ${SERVICE}
+    image: linuxserver/heimdall:${VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - ${INT_PORT:-0}:80
+    volumes:
+      - config:/updater/data
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE:-heimdall}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE:-heimdall}.entrypoints=https
+      - traefik.http.routers.${SERVICE:-heimdall}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE:-heimdall}.loadbalancer.server.port=${PORT:-80}
+      - traefik.http.routers.${SERVICE:-heimdall}.middlewares=local-ipallowlist@docker
+    environment:
+      - PGID=1000
+      - PUID=1000
+volumes:
+  config:
+    driver: local
+    
+networks:
+  traefik:
+    external: true
