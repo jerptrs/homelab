@@ -8,9 +8,9 @@ services:
       - 8888:8888/tcp # HTTP proxy
       - 8388:8388/tcp # Shadowsocks
       - 8388:8388/udp # Shadowsocks
-      - ${QBITTORRENT_WEBUI_PORT}:8080/tcp # qbittorrent webui port
-      - ${QBITTORRENT_TORRENT_PORT_TCP}:6881/tcp # qbittorrent torrent port tcp
-      - ${QBITTORRENT_TORRENT_PORT_UDP}:6881/udp # qbittorrent torrent port udp
+      - ${QBITTORRENT_WEBUI_PORT}:${QBITTORRENT_WEBUI_PORT}/tcp # qbittorrent webui port
+      - ${QBITTORRENT_TORRENT_PORT_TCP}:${QBITTORRENT_TORRENT_PORT_TCP}/tcp # qbittorrent torrent port tcp
+      - ${QBITTORRENT_TORRENT_PORT_UDP}:${QBITTORRENT_TORRENT_PORT_TCP}/udp # qbittorrent torrent port udp
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
       - OPENVPN_USER=${OPENVPN_USER}
