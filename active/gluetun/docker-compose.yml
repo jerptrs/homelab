@@ -37,7 +37,7 @@ services:
     volumes:
       - qbittorrent_config:/config
       - qbittorrent_downloads:/downloads
-    network_mode: "service:gluetun"
+    network_mode: service:gluetun
 
 volumes:
   gluetun:
