@@ -24,6 +24,25 @@ services:
     cap_add:
       - NET_ADMIN
 
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - WEBUI_PORT=${QBITTORRENT_WEBUI_PORT}
+      - TORRENTING_PORT=${QBITTORRENT_TORRENT_PORT_TCP}
+    volumes:
+      - qbittorrent_config:/config
+      - qbittorrent_downloads:/downloads
+    network_mode: service:gluetun
+
 volumes:
   gluetun:
+    driver: local
+  qbittorrent_config:
+    driver: local
+  qbittorrent_downloads:
     driver: local
