@@ -6,7 +6,7 @@ services:
     ports:
       - ${INT_PORT}:3000
     volumes:
-      - data:/var/lib/gitea
+      - data:/data
       - config:/etc/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
