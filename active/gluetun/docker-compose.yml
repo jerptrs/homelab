@@ -36,13 +36,11 @@ services:
       - TORRENTING_PORT=${QBITTORRENT_TORRENT_PORT_TCP}
     volumes:
       - qbittorrent_config:/config
-      - qbittorrent_downloads:/downloads
+      - ${MEDIA_PATH}:/downloads
     network_mode: service:gluetun
 
 volumes:
   gluetun:
     driver: local
   qbittorrent_config:
-    driver: local
-  qbittorrent_downloads:
     driver: local
