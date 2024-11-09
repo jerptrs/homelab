@@ -23,7 +23,7 @@ services:
     - RACK_ENV=production
 
   onetimesecret-redis:
-    image: redis:bookworm
+    image: redis:latest
     container_name: ${SERVICE}-redis
     restart: unless-stopped
     volumes:
