@@ -4,7 +4,7 @@ services:
     image: influxdb:latest
     restart: unless-stopped
     ports:
-      - 8086:8086
+      - $${INT_PORT:-0}:8086
     volumes:
       - data:/var/lib/influxdb2
       - config:/etc/influxdb2
