@@ -18,6 +18,7 @@ services:
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
     environment:
       TZ: ${TZ}
 
