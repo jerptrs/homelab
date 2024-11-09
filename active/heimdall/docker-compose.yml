@@ -1,6 +1,6 @@
 services:
   heimdall:
-    container_name: ${SERVICE}
+    container_name: ${SERVICE:-heimdall}
     image: linuxserver/heimdall:${VERSION:-latest}
     restart: unless-stopped
     ports:
