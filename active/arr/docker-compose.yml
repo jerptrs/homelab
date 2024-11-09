@@ -2,7 +2,7 @@ services:
   # VPN
   gluetun:
     container_name: gluetun
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:latest
     restart: unless-stopped
     ports:
       - 8888:8888/tcp # HTTP proxy
@@ -11,8 +11,6 @@ services:
       - ${QBITTORRENT_WEBUI_PORT}:${QBITTORRENT_WEBUI_PORT}/tcp # qbittorrent webui port
       - ${QBITTORRENT_TORRENT_PORT_TCP}:${QBITTORRENT_TORRENT_PORT_TCP}/tcp # qbittorrent torrent port tcp
       - ${QBITTORRENT_TORRENT_PORT_UDP}:${QBITTORRENT_TORRENT_PORT_UDP}/udp # qbittorrent torrent port udp
-      - ${JELLYFIN_WEBUI_PORT}:${JELLYFIN_WEBUI_PORT} # jellyfin webui port
-      - ${JELLYSEERR_WEBUI_PORT}:${JELLYSEERR_WEBUI_PORT} # jellyseer webui port
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
       - OPENVPN_USER=${OPENVPN_USER}
@@ -26,7 +24,6 @@ services:
     cap_add:
       - NET_ADMIN
 
-  # torrent client
   qbittorrent:
     container_name: qbittorrent
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -42,59 +39,10 @@ services:
       - qbittorrent_downloads:/downloads
     network_mode: "service:gluetun"
 
-  jellyfin:
-    container_name: jellyfin
-    image: jellyfin/jellyfin
-    restart: unless-stopped
-    environment:
-      - JELLYFIN_PublishedServerUrl=${JELLYFIN_PublishedServerUrl}
-    volumes:
-      - jellyfin_config:/config
-      - jellyfin_cache:/cache
-      - qbittorrent_downloads:/media
-    network_mode: "service:gluetun"
-
-  jellyseerr:
-    container_name: jellyseerr
-    image: fallenbagel/jellyseerr:latest
-    restart: unless-stopped
-    environment:
-      - LOG_LEVEL=${JELLYSEERR_LOG_LEVEL}
-      - TZ=${TZ}
-    volumes:
-      - jellyseerr_config/app/config
-    network_mode: "service:gluetun"
-
-  # sonarr:
-  #   container_name: sonarr
-  #   image: ghcr.io/hotio/sonarr
-  #   restart: unless-stopped
-  #   ports:
-  #     - 8989:8989
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     #- UMASK=002 # ???
-  #     - TZ=${TZ}
-  #   volumes:
-  #     - sonarr_config:/config
-  #     - sonarr_data:/data
-  #   network_mode: "service:gluetun"
-
 volumes:
   gluetun:
     driver: local
   qbittorrent_config:
     driver: local
   qbittorrent_downloads:
-    driver: local
-  jellyfin_config:
-    driver: local
-  jellyfin_cache:
-    driver: local
-  jellyseerr_config:
-    driver: local
-  sonarr_config:
-    driver: local
-  sonarr_data:
     driver: local
