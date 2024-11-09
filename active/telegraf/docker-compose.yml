@@ -19,7 +19,7 @@ services:
       - INFLUX_TOKEN=${INFLUX_TOKEN}
       - INFLUX_HOST=${INFLUX_HOST}
       - INFLUX_ORG=${INFLUX_ORG}
-    user: telegraf:988
+    user: telegraf:$(stat -c '%g' /var/run/docker.sock)
 
 volumes:
   data:
