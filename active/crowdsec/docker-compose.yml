@@ -20,28 +20,6 @@ services:
     labels:
       - traefik.enable=false
 
-  dashboard:
-    container_name: ${SERVICE:-crowdsec}-dashboard
-    image: metabase/metabase:${VERSION:-latest}
-    restart: unless-stopped
-    ports: 
-      - ${INT_PORT:-0}:3000
-    environment: 
-      - MB_DB_FILE=/metabase.db
-    volumes:
-      - ${DB_PATH}:/metabase.db
-      # Timesync
-      - /etc/localtime:/etc/localtime:ro
-    networks:
-      - traefik
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
-      - traefik.http.routers.${SERVICE}.entrypoints=https
-      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-      - traefik.docker.network=traefik
-
 volumes:
   config:
     driver: local
