@@ -4,15 +4,17 @@ services:
     image: crowdsecurity/crowdsec:${VERSION:-latest}
     restart: always
     environment: 
-      #https://hub.crowdsec.net/author/crowdsecurity/collections/traefik
+      # https://hub.crowdsec.net/author/crowdsecurity/collections/traefik
       COLLECTIONS: crowdsecurity/traefik
       GID: ${GID-1000}
     volumes:
       - config:/etc/crowdsec
       - data:/var/lib/crowdsec/data
+      # logs
       - /var/log:/var/log:ro
+      - traefik_logs:/var/log/traefik
     networks:
-      - crowdsec
+      - traefik
     labels:
       - traefik.enable=false
 
@@ -40,5 +42,5 @@ volumes:
     driver: local
 
 networks:
-  crowdsec:
-    name: crowdsec
+  traefik:
+    external: true
