@@ -13,7 +13,21 @@ services:
     labels:
       - 
     environment:
-      TZ: ${TZ}
+      -
+    # depending if required
+    network_mode: 
+    user:
+    command:
+      -
+    healthcheck:
+      test: ["executable", "arg"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      - serviceName
+    ulimits:
 
 volumes:
 

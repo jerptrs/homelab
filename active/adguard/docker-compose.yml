@@ -1,12 +1,12 @@
 services:
   adguard:
-    container_name: ${SERVICE}
+    container_name: ${SERVICE:-adguard}
     image: adguard/adguardhome:latest
     restart: unless-stopped
     ports:
       - 53:53/tcp
       - 53:53/udp
-      - ${INT_PORT}:3000/tcp
+      - ${INT_PORT:-0}:3000/tcp
     volumes:
       - work:/opt/adguardhome/work
       - conf:/opt/adguardhome/conf
@@ -22,8 +22,6 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
       - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
-    environment:
-      TZ: ${TZ}
 
 volumes:
   work:

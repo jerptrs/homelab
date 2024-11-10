@@ -1,10 +1,10 @@
 services:
   gitea:
-    container_name: ${SERVICE}
+    container_name: ${SERVICE:-gitea}
     image: gitea/gitea:1.22.3
     restart: unless-stopped
     ports:
-      - ${INT_PORT}:3000
+      - ${INT_PORT:-0}:3000
     volumes:
       - data:/data
       - config:/etc/gitea
@@ -13,7 +13,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
-      - database
+      - gitea
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
@@ -56,5 +56,5 @@ volumes:
 networks:
   traefik:
     external: true
-  database:
-    external: true
+  gitea:
+    name: gitea

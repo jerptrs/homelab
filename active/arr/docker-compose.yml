@@ -1,6 +1,6 @@
 services: 
   gluetun:
-    container_name: ${SERVICE}-gluetun
+    container_name: ${SERVICE:-gluetun}
     image: qmcgaw/gluetun:latest
     restart: unless-stopped
     ports:
@@ -44,7 +44,6 @@ services:
     volumes:
       - ${MEDIA_PATH}:/exa/exadir
       # Timesync
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
       TZ: ${TZ}

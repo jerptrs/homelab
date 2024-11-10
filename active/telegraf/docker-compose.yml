@@ -1,7 +1,8 @@
 services:
   telegraf:
-    container_name: ${SERVICE}
+    container_name: ${SERVICE:-telegraf}
     image: telegraf:latest
+    restart: unless-stopped
     volumes:
       - data:/etc/telegraf
       - /:/hostfs:ro

@@ -1,7 +1,7 @@
 services:
   tubearchivist:
+    container_name: ${SERVICE:-tubearchivist}
     image: bbilly1/tubearchivist:latest
-    container_name: ${SERVICE}
     restart: unless-stopped
     ports:
       - ${INT_PORT}:8000
@@ -42,11 +42,9 @@ services:
       - archivist-redis
 
   archivist-redis:
-    image: redis/redis-stack-server:latest
     container_name: ${SERVICE}-redis
+    image: redis/redis-stack-server:latest
     restart: unless-stopped
-    expose:
-      - 6379
     volumes:
       - redis:/data
       # Timesync
@@ -57,9 +55,15 @@ services:
       - archivist-es
 
   archivist-es:
-    image: bbilly1/tubearchivist-es:latest
     container_name: ${SERVICE}-es
+    image: bbilly1/tubearchivist-es:latest
     restart: unless-stopped
+    volumes:
+      - es:/usr/share/elasticsearch/data
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - tubearchivist
     environment:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
@@ -70,14 +74,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - es:/usr/share/elasticsearch/data
-      # Timesync
-      - /etc/localtime:/etc/localtime:ro
-    networks:
-      - tubearchivist
-    expose:
-      - 9200
 
 volumes:
   media:

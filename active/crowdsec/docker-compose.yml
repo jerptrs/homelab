@@ -3,10 +3,6 @@ services:
     container_name: ${SERVICE:-crowdsec}
     image: crowdsecurity/crowdsec:${VERSION:-latest}
     restart: always
-    environment: 
-      # https://hub.crowdsec.net/author/crowdsecurity/collections/traefik
-      COLLECTIONS: ${COLLECTIONS:-crowdsecurity/traefik}
-      GID: ${GID-1000}
     volumes:
       - config:/etc/crowdsec
       - data:/var/lib/crowdsec/data
@@ -19,6 +15,10 @@ services:
       - traefik
     labels:
       - traefik.enable=false
+    environment: 
+      # https://hub.crowdsec.net/author/crowdsecurity/collections/traefik
+      COLLECTIONS: ${COLLECTIONS:-crowdsecurity/traefik}
+      GID: ${GID-1000}
 
 volumes:
   config:

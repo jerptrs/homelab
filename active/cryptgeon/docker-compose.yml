@@ -1,10 +1,10 @@
 services:
   cryptgeon:
+    container_name: ${SERVICE:-cryptgeon}
     image: cupcakearmy/cryptgeon:latest
-    container_name: ${SERVICE}
     restart: unless-stopped
     ports:
-      - ${INT_PORT}:8000
+      - ${INT_PORT:-0}:8000
     networks:
       - traefik
       - cryptgeon
@@ -25,21 +25,23 @@ services:
       - REDIS=redis://cryptgeon-redis:6379/0
       - MAX_VIEWS=${MAX_VIEWS}
       - MAX_EXPIRATION=${MAX_EXPIRATION}
-    depends_on:
-      - cryptgeon-redis
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://127.0.0.1:8000/api/live/"]
       interval: 1m
       timeout: 3s
       retries: 2
       start_period: 5s
+    depends_on:
+      - cryptgeon-redis
 
-  cryptgeon-redis:
-    image: redis:latest
+  redis:
     container_name: ${SERVICE}-redis
+    image: redis:latest
     restart: unless-stopped
     volumes:
       - redis:/data
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - cryptgeon
 

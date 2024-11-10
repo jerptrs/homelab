@@ -1,12 +1,12 @@
 services:
   traefik:
-    container_name: traefik
+    container_name: ${SERVICE:-traefik}
     image: traefik:v3.2
     restart: unless-stopped
     ports:
       - 80:80
       - 443:443
-      - ${INT_PORT}:8080
+      - ${INT_PORT:-0}:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt

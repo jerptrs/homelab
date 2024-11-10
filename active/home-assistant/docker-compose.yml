@@ -1,12 +1,11 @@
 services:
-  homeassistant:
-    container_name: ${SERVICE}
+  home-assistant:
+    container_name: ${SERVICE:-home-assistant}
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     volumes:
       - config:/config
       # Timesync
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
        - traefik

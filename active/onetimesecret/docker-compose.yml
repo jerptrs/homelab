@@ -1,16 +1,16 @@
 services:
   onetimesecret:
+    container_name: ${SERVICE:-onetimesecret}
     image: onetimesecret/onetimesecret:latest
-    container_name: ${SERVICE}
     restart: unless-stopped
     ports:
       - ${INT_PORT}:3000
-    networks:
-      - traefik
-      - onetimesecret
     volumes:
       # Timesync
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik
+      - onetimesecret
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
@@ -19,18 +19,20 @@ services:
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
       - traefik.docker.network=traefik
     environment:
-    - REDIS_URL=redis://onetimesecret-redis:6379/0
-    - COLONEL=${COLONEL}
-    - HOST=${DOMAIN}
-    - SSL=false
-    - RACK_ENV=production
+      - REDIS_URL=redis://onetimesecret-redis:6379/0
+      - COLONEL=${COLONEL}
+      - HOST=${DOMAIN}
+      - SSL=false
+      - RACK_ENV=production
 
   onetimesecret-redis:
-    image: redis:latest
     container_name: ${SERVICE}-redis
+    image: redis:latest
     restart: unless-stopped
     volumes:
       - redis:/data
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - onetimesecret
 

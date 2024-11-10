@@ -1,7 +1,7 @@
 services:
   homebox:
+    container_name: ${SERVICE:-homebox}
     image: ghcr.io/hay-kot/homebox:latest
-    container_name: ${SERVICE}
     restart: unless-stopped
     ports:
       - ${INT_PORT}:7745
@@ -21,9 +21,9 @@ services:
       - traefik.docker.network=traefik
       - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
     environment:
-    - HBOX_LOG_LEVEL=${LOG_LEVEL}
-    - HBOX_LOG_FORMAT=text
-    - HBOX_WEB_MAX_UPLOAD_SIZE=10
+      - HBOX_LOG_LEVEL=${LOG_LEVEL}
+      - HBOX_LOG_FORMAT=text
+      - HBOX_WEB_MAX_UPLOAD_SIZE=10
 
 volumes:
    data:

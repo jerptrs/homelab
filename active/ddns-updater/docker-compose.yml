@@ -1,10 +1,10 @@
 services:
   ddns-updater:
-    container_name: ${SERVICE}
+    container_name: ${SERVICE:-ddns-updater}
     image: qmcgaw/ddns-updater:latest
     restart: always
     ports:
-      - ${INT_PORT}:8000
+      - ${INT_PORT:-0}:8000
     volumes:
       - data:/updater/data
       # Timesync
@@ -19,6 +19,7 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
       - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
+
 volumes:
   data:
     driver: local
