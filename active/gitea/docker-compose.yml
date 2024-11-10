@@ -9,7 +9,6 @@ services:
       - data:/data
       - config:/etc/gitea
       # Timesync
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
@@ -37,8 +36,10 @@ services:
     restart: unless-stopped
     volumes:
       - database:/var/lib/mysql
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
     networks:
-      - database
+      - gitea
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_USER=${DB_USER}
