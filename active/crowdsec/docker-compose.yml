@@ -24,7 +24,8 @@ services:
     container_name: ${SERVICE:-crowdsec}-dashboard
     image: metabase/metabase:${VERSION:-latest}
     restart: unless-stopped
-    ports: ${INT_PORT:-0}:3000
+    ports: 
+      - ${INT_PORT:-0}:3000
     environment: 
       - MB_DB_FILE=/metabase.db
     volumes:
