@@ -11,7 +11,7 @@ services:
       - config:/etc/crowdsec
       - data:/var/lib/crowdsec/data
       # logs
-      - /var/log:/var/log:ro
+      #- /var/log:/var/log:ro
       - traefik_logs:/var/log/traefik:ro
     networks:
       - traefik
