@@ -9,7 +9,6 @@ services:
       - ${STORAGE_PATH}:/youtube
       - cache:/cache
       # Timesync
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik

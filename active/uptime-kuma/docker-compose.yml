@@ -9,7 +9,6 @@ services:
       - data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
       # Timesync
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
