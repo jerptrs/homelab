@@ -7,7 +7,7 @@ services:
       - 8888:8888/tcp # HTTP proxy
       - 8388:8388/tcp # Shadowsocks
       - 8388:8388/udp # Shadowsocks
-      #- ${EXATORRENT_WEBUI_PORT}:${EXATORRENT_WEBUI_PORT}/tcp # EXATORRENT webui port
+      - ${EXATORRENT_WEBUI_PORT:-0}:${EXATORRENT_WEBUI_PORT:-5000}/tcp # EXATORRENT webui port
       - ${EXATORRENT_TORRENT_PORT_TCP}:${EXATORRENT_TORRENT_PORT_TCP}/tcp # EXATORRENT torrent port tcp
       - ${EXATORRENT_TORRENT_PORT_UDP}:${EXATORRENT_TORRENT_PORT_UDP}/udp # qbittorrent torrent port udp
     environment:
@@ -36,9 +36,6 @@ services:
     container_name: ${SERVICE}-exatorrent
     image: ghcr.io/varbhat/exatorrent:latest
     restart: unless-stopped
-    ports:
-      - 42069:42069
-      - ${INT_PORT:-0}:5000
     volumes:
       - ${MEDIA_PATH}:/exa/exadir
       # Timesync
