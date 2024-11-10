@@ -22,7 +22,7 @@ services:
     environment:
       # Size limit for a single note.
       - SIZE_LIMIT=4 MiB
-      - REDIS=redis://cryptgeon-redis:6379/0
+      - REDIS=redis://redis:6379/0
       - MAX_VIEWS=${MAX_VIEWS}
       - MAX_EXPIRATION=${MAX_EXPIRATION}
     healthcheck:
@@ -32,7 +32,7 @@ services:
       retries: 2
       start_period: 5s
     depends_on:
-      - cryptgeon-redis
+      - redis
 
   redis:
     container_name: ${SERVICE}-redis
