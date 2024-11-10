@@ -12,7 +12,7 @@ services:
       - data:/var/lib/crowdsec/data
       # logs
       - /var/log:/var/log:ro
-      - traefik_logs:/var/log/traefik
+      - traefik_logs:/var/log/traefik:ro
     networks:
       - traefik
     labels:
