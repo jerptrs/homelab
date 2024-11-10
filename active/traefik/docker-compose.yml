@@ -10,7 +10,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt
-      - logs:/var/log/
     networks:
       - traefik
     labels:
@@ -30,7 +29,6 @@ services:
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
     command:
       - --log.level=${LOG_LEVEL}
-      - --log.filePath=/var/log/traefik.log
       - --providers.docker=true
       - --api.dashboard=true
       - --api.insecure=true
@@ -53,8 +51,6 @@ services:
 
 volumes:
   letsencrypt:
-    driver: local
-  logs:
     driver: local
 
 networks:

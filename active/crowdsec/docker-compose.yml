@@ -4,15 +4,18 @@ services:
     image: crowdsecurity/crowdsec:${VERSION:-latest}
     restart: always
     environment: 
-      #https://hub.crowdsec.net/author/crowdsecurity/collections/nginx
+      #https://hub.crowdsec.net/author/crowdsecurity/collections/traefik
       COLLECTIONS: crowdsecurity/traefik
       GID: ${GID-1000}
     volumes:
       - config:/etc/crowdsec
       - data:/var/lib/crowdsec/data
       - /var/log:/var/log:ro
+      - treafik_logs:/var/log/traefik
     networks:
       - crowdsec
+    labels:
+      - traefik.enable=false
 
   # dashboard:
   #   #we're using a custom Dockerfile so that metabase pops with pre-configured dashboards
