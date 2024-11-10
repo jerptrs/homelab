@@ -37,11 +37,10 @@ services:
     image: ghcr.io/varbhat/exatorrent:latest
     restart: unless-stopped
     volumes:
-      - ${MEDIA_PATH}/exatorrent:/exa/exadir
+      - ${MEDIA_PATH}:/exa/exadir
       # Timesync
       - /etc/localtime:/etc/localtime:ro
-    network_mode: service:gluetun
-    user: 0:0 # it hurts. 
+    network_mode: service:gluetun 
 
 
 volumes:
