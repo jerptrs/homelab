@@ -1,7 +1,7 @@
 services:
   # VPN
   gluetun:
-    container_name: gluetun
+    container_name: ${SERVICE}-gluetun
     image: qmcgaw/gluetun:latest
     restart: unless-stopped
     ports:
@@ -32,23 +32,20 @@ services:
     cap_add:
       - NET_ADMIN
 
-  qbittorrent:
-    container_name: qbittorrent
-    image: lscr.io/linuxserver/qbittorrent:latest
+  exatorrent:
+    container_name: ${SERVICE}-exatorrent
+    image: ghcr.io/varbhat/exatorrent:latest
     restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-      - WEBUI_PORT=${QBITTORRENT_WEBUI_PORT}
-      - TORRENTING_PORT=${QBITTORRENT_TORRENT_PORT_TCP}
+    ports:
+      - 42069:42069
+      - ${INT_PORT:-0}:5000
     volumes:
-      - qbittorrent_config:/config
-      - ${MEDIA_PATH}:/downloads
+      - ${MEDIA_PATH}:/exa/exadir
+    environment:
+      TZ: ${TZ}
     network_mode: service:gluetun
+
 
 volumes:
   gluetun:
-    driver: local
-  qbittorrent_config:
     driver: local
