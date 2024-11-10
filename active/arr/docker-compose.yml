@@ -1,36 +1,36 @@
 services: 
-  # gluetun:
-  #   container_name: ${SERVICE:-gluetun}
-  #   image: qmcgaw/gluetun:latest
-  #   restart: unless-stopped
-  #   ports:
-  #     - 8888:8888/tcp # HTTP proxy
-  #     - 8388:8388/tcp # Shadowsocks
-  #     - 8388:8388/udp # Shadowsocks
-  #     - ${EXATORRENT_WEBUI_PORT:-0}:${EXATORRENT_WEBUI_PORT:-5000}/tcp # EXATORRENT webui port
-  #     - ${EXATORRENT_TORRENT_PORT_TCP}:${EXATORRENT_TORRENT_PORT_TCP}/tcp # EXATORRENT torrent port tcp
-  #     - ${EXATORRENT_TORRENT_PORT_UDP}:${EXATORRENT_TORRENT_PORT_UDP}/udp # qbittorrent torrent port udp
-  #   environment:
-  #     - VPN_SERVICE_PROVIDER=protonvpn
-  #     - OPENVPN_USER=${OPENVPN_USER}
-  #     - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
-  #     - SERVER_COUNTRIES=${SERVER_COUNTRIES}
-  #   volumes:
-  #     - gluetun:/gluetun
-  #     # Timesync
-  #     - /etc/localtime:/etc/localtime:ro
-  #   labels:
-  #     - traefik.enable=true
-  #     - traefik.docker.network=traefik
-  #     - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
-  #     - traefik.http.routers.${SERVICE}.entrypoints=https
-  #     - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-  #     - traefik.http.services.${SERVICE}.loadbalancer.server.port=${EXATORRENT_WEBUI_PORT}
-  #     - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
-  #   devices:
-  #     - /dev/net/tun:/dev/net/tun
-  #   cap_add:
-  #     - NET_ADMIN
+  gluetun:
+    container_name: ${SERVICE:-gluetun}
+    image: qmcgaw/gluetun:latest
+    restart: unless-stopped
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+      - ${EXATORRENT_WEBUI_PORT:-0}:${EXATORRENT_WEBUI_PORT:-5000}/tcp # EXATORRENT webui port
+      - ${EXATORRENT_TORRENT_PORT_TCP}:${EXATORRENT_TORRENT_PORT_TCP}/tcp # EXATORRENT torrent port tcp
+      - ${EXATORRENT_TORRENT_PORT_UDP}:${EXATORRENT_TORRENT_PORT_UDP}/udp # qbittorrent torrent port udp
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - OPENVPN_USER=${OPENVPN_USER}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+    volumes:
+      - gluetun:/gluetun
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${EXATORRENT_WEBUI_PORT}
+      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
 
   exatorrent:
     container_name: ${SERVICE}-exatorrent
@@ -40,7 +40,8 @@ services:
       - ${MEDIA_PATH}/exatorrent:/exa/exadir
       # Timesync
       - /etc/localtime:/etc/localtime:ro
-    #network_mode: service:gluetun
+    network_mode: service:gluetun
+    user: 0:0 # it hurts. 
 
 
 volumes:
