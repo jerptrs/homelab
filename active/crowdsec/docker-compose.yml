@@ -40,6 +40,8 @@ volumes:
     driver: local
   data:
     driver: local
+  traefik_logs:
+    external: true
 
 networks:
   traefik:
