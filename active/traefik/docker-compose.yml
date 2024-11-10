@@ -10,6 +10,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt
+      - config:/etc/traefik/
       # Timesync
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -71,6 +72,8 @@ services:
 
 volumes:
   letsencrypt:
+    driver: local
+  config:
     driver: local
 
 networks:
