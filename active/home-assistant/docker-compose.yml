@@ -10,12 +10,13 @@ services:
     networks:
        - traefik
     labels:
-      traefik.enable: true
-      traefik.http.routers.${SERVICE}.rule: Host(`${DOMAIN}`)
-      traefik.http.routers.${SERVICE}.entrypoints: https
-      traefik.http.routers.${SERVICE}.tls.certresolver: letsencrypt
-      traefik.http.services.${SERVICE}.loadbalancer.server.port: ${PORT}
-      traefik.docker.network: traefik
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE:-heimdall}.middlewares=local-ipallowlist@docker
     privileged: true
 
 volumes:

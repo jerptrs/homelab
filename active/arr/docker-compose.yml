@@ -7,19 +7,17 @@ services:
       - 8888:8888/tcp # HTTP proxy
       - 8388:8388/tcp # Shadowsocks
       - 8388:8388/udp # Shadowsocks
-      - ${QBITTORRENT_WEBUI_PORT}:${QBITTORRENT_WEBUI_PORT}/tcp # qbittorrent webui port
-      - ${QBITTORRENT_TORRENT_PORT_TCP}:${QBITTORRENT_TORRENT_PORT_TCP}/tcp # qbittorrent torrent port tcp
-      - ${QBITTORRENT_TORRENT_PORT_UDP}:${QBITTORRENT_TORRENT_PORT_TCP}/udp # qbittorrent torrent port udp
+      #- ${EXATORRENT_WEBUI_PORT}:${EXATORRENT_WEBUI_PORT}/tcp # EXATORRENT webui port
+      - ${EXATORRENT_TORRENT_PORT_TCP}:${EXATORRENT_TORRENT_PORT_TCP}/tcp # EXATORRENT torrent port tcp
+      - ${EXATORRENT_TORRENT_PORT_UDP}:${EXATORRENT_TORRENT_PORT_UDP}/udp # qbittorrent torrent port udp
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
       - OPENVPN_USER=${OPENVPN_USER}
       - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - SERVER_COUNTRIES=${SERVER_COUNTRIES}
-      - TZ=${TZ}
     volumes:
       - gluetun:/gluetun
       # Timesync
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
       - traefik.enable=true
@@ -27,7 +25,7 @@ services:
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${QBITTORRENT_TORRENT_PORT_TCP}
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${EXATORRENT_WEBUI_PORT}
       - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
     devices:
       - /dev/net/tun:/dev/net/tun
@@ -45,8 +43,6 @@ services:
       - ${MEDIA_PATH}:/exa/exadir
       # Timesync
       - /etc/localtime:/etc/localtime:ro
-    environment:
-      TZ: ${TZ}
     network_mode: service:gluetun
 
 
