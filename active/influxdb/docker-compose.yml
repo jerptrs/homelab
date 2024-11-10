@@ -8,6 +8,9 @@ services:
     volumes:
       - data:/var/lib/influxdb2
       - config:/etc/influxdb2
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
       - influxdb

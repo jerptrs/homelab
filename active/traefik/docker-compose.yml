@@ -10,6 +10,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
     labels:
@@ -19,27 +22,40 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.routers.${SERVICE}.service=api@internal
       - traefik.http.routers.${SERVICE}.middlewares=strip
-      - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=8080
+      # Strip Middleware
+      - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
+      # IPAllowList Middleware
       - traefik.http.middlewares.local-ipallowlist.IPAllowList.sourcerange=${SOURCERANGE}
+      # Enable IPAllowList
       - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
+      # CrowdSec Middleware
+      - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.crowdseclapikey=${LAPI_KEY}
+      - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.enabled=true
     environment:
-      - TZ=${TZ}
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
     command:
+      # Logging
       - --log.level=${LOG_LEVEL}
+      - --accesslog=true
+      - --accesslog.filepath=/var/log/traefik/access.log
+      - --accesslog.filters.statuscodes=200,300-302,404
+      - --accesslog.addinternals
+      - --accesslog.format=json
+      # Docker Provider & Dashboard
       - --providers.docker=true
       - --api.dashboard=true
       - --api.insecure=true
+      # Certificate
       - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
       - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
       - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
       - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
-      # http
+      # HTTP Redirect
       - --entrypoints.http.address=:${HTTP_PORT}
       - --entrypoints.http.http.redirections.entrypoint.to=https
-      # https
+      # HTTPS
       - --entrypoints.https.address=:${HTTPS_PORT}
       - --entrypoints.http.http.redirections.entrypoint.scheme=https
       - --entrypoints.https.http.tls=true
@@ -48,6 +64,10 @@ services:
       - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN0}
       - --entrypoints.https.http.tls.domains[1].main=${DOMAIN1}
       - --entrypoints.https.http.tls.domains[1].sans=*.${DOMAIN1}
+      # CrowdSec
+      - --experimental.plugins.crowdsec-bouncer.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      - --experimental.plugins.crowdsec-bouncer.version=v1.3.5
+      - --entrypoints.https.http.middlewares=crowdsec@docker
 
 volumes:
   letsencrypt:

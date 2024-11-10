@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     volumes:
       - config:/config
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
        - traefik

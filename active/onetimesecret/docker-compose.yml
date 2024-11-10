@@ -8,6 +8,10 @@ services:
     networks:
       - traefik
       - onetimesecret
+    volumes:
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     labels:
       - traefik.enable=true
       - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)

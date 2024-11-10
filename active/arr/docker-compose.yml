@@ -1,5 +1,4 @@
-services:
-  # VPN
+services: 
   gluetun:
     container_name: ${SERVICE}-gluetun
     image: qmcgaw/gluetun:latest
@@ -19,6 +18,9 @@ services:
       - TZ=${TZ}
     volumes:
       - gluetun:/gluetun
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
@@ -41,6 +43,9 @@ services:
       - ${INT_PORT:-0}:5000
     volumes:
       - ${MEDIA_PATH}:/exa/exadir
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       TZ: ${TZ}
     network_mode: service:gluetun

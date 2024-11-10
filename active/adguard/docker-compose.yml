@@ -10,6 +10,9 @@ services:
     volumes:
       - work:/opt/adguardhome/work
       - conf:/opt/adguardhome/conf
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
     labels:

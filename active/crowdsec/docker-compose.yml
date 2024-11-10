@@ -5,35 +5,20 @@ services:
     restart: always
     environment: 
       # https://hub.crowdsec.net/author/crowdsecurity/collections/traefik
-      COLLECTIONS: crowdsecurity/traefik
+      COLLECTIONS: ${COLLECTIONS:-crowdsecurity/traefik}
       GID: ${GID-1000}
     volumes:
       - config:/etc/crowdsec
       - data:/var/lib/crowdsec/data
       # logs
-      #- /var/log:/var/log:ro
       - traefik_logs:/var/log/traefik:ro
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
     labels:
       - traefik.enable=false
-
-  # dashboard:
-  #   #we're using a custom Dockerfile so that metabase pops with pre-configured dashboards
-  #   build: ./crowdsec/dashboard
-  #   restart: always
-  #   ports:
-  #     - 3000:3000
-  #   environment:
-  #     MB_DB_FILE: /data/metabase.db
-  #     MGID: "${GID-1000}"
-  #   depends_on:
-  #     - 'crowdsec'
-  #   volumes:
-  #     - crowdsec-db:/metabase-data/
-  #   networks:
-  #     crowdsec_test:
-  #       ipv4_address: 172.20.0.5
 
 volumes:
   config:

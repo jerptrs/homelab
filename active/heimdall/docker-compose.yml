@@ -7,6 +7,9 @@ services:
       - ${INT_PORT:-0}:80
     volumes:
       - config:/updater/data
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
     labels:

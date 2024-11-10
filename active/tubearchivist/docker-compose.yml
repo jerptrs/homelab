@@ -8,6 +8,9 @@ services:
     volumes:
       - ${STORAGE_PATH}:/youtube
       - cache:/cache
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
       - tubearchivist
@@ -47,6 +50,8 @@ services:
       - 6379
     volumes:
       - redis:/data
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - tubearchivist
     depends_on:
@@ -68,6 +73,8 @@ services:
         hard: -1
     volumes:
       - es:/usr/share/elasticsearch/data
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - tubearchivist
     expose:
