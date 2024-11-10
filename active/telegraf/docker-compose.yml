@@ -7,7 +7,6 @@ services:
       - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock
       # Timesync
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - influxdb
