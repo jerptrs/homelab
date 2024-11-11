@@ -8,8 +8,11 @@ services:
       - ${INT_PORT:-0}:8080
     volumes:
       - data:/opt/keycloak
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
+      - keycloack
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
