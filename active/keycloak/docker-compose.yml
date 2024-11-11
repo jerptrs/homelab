@@ -30,7 +30,7 @@ services:
       - KC_FEATURES=${KC_FEATURES}
       - KC_HEALTH_ENABLED=true
       - KC_HOSTNAME=https://${DOMAIN}
-    command: start-prod
+    command: start
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 2m
