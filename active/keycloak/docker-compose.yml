@@ -1,0 +1,59 @@
+# docker run -p 8080:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:26.0.5 start-dev
+services:
+  keycloak:
+    container_name: ${SERVICE:-keycloak}
+    image: quay.io/keycloak/keycloak:26.0.5
+    restart: unless-stopped
+    ports:
+      - ${INT_PORT:-0}:8080
+    volumes:
+      - data:/opt/keycloak
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=${KC_BOOTSTRAP_ADMIN_USERNAME}
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=${KC_BOOTSTRAP_ADMIN_PASSWORD}
+      - KC_DB=mysql
+      - KC_DB_USERNAME=${MYSQL_USER}
+      - KC_DB_PASSWORD=${MYSQL_PASSWORD}
+      - KC_FEATURES=${KC_FEATURES}
+      - KC_HEALTH_ENABLED=true
+    command: start-dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  db:
+    container_name: ${SERVICE-:keycloak}-db
+    image: mysql:${VERSION:-lts}
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - keycloack
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-keycloack}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+volumes:
+  data:
+    driver: local
+  db:
+    driver: local
+
+networks:
+  traefik:
+    external: true
+  keycloack:
+    external: true
