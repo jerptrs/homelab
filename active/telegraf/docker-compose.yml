@@ -23,8 +23,6 @@ services:
       - INFLUX_HOST=${INFLUX_HOST}
       - INFLUX_ORG=${INFLUX_ORG}
     user: telegraf:993 # stat -c '%g' /var/run/docker.sock
-    dns:
-      - adguard
 
 volumes:
   data:
