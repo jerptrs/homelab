@@ -29,13 +29,10 @@ services:
       - KC_DB_PASSWORD=${MYSQL_PASSWORD}
       - KC_FEATURES=${KC_FEATURES}
       - KC_HEALTH_ENABLED=true
-    command: start --hostname ${DOMAIN} --proxy-headers xforwarded --http-enabled true
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/health/ready"]
-      interval: 15s
-      timeout: 2s
-      retries: 15
-
+      - KC_PROXY_HEADERS=xforwarded
+      - KC_HTTP_ENABLED=true
+      - KC_HOSTNAME=${DOMAIN}
+    command: start #--hostname ${DOMAIN} --proxy-headers xforwarded --http-enabled true
   db:
     container_name: ${SERVICE:-keycloak}-db
     image: mysql:${VERSION:-lts}
