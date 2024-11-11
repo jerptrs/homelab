@@ -34,7 +34,7 @@ services:
       start_period: 30s
 
   db:
-    container_name: ${SERVICE-:keycloak}-db
+    container_name: ${SERVICE:-keycloak}-db
     image: mysql:${VERSION:-lts}
     restart: unless-stopped
     volumes:
