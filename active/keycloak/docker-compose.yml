@@ -31,7 +31,8 @@ services:
       - KC_PROXY_HEADERS=xforwarded
       - KC_HTTP_ENABLED=true
       - KC_HOSTNAME=${DOMAIN}
-    command: start #--hostname ${DOMAIN} --proxy-headers xforwarded --http-enabled true
+      - KC_HOSTNAME_STRICT=false
+    command: start
   db:
     container_name: ${SERVICE:-keycloak}-db
     image: mysql:${VERSION:-lts}
