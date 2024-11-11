@@ -21,6 +21,7 @@ services:
       - KC_BOOTSTRAP_ADMIN_USERNAME=${KC_BOOTSTRAP_ADMIN_USERNAME}
       - KC_BOOTSTRAP_ADMIN_PASSWORD=${KC_BOOTSTRAP_ADMIN_PASSWORD}
       - KC_DB=mysql
+      - KC_DB_URL=jdbc:mysql://db:3306/${MYSQL_DATABASE}
       - KC_DB_USERNAME=${MYSQL_USER}
       - KC_DB_PASSWORD=${MYSQL_PASSWORD}
       - KC_FEATURES=${KC_FEATURES}
@@ -46,6 +47,7 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE:-keycloack}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
 volumes:
   data:
     driver: local
