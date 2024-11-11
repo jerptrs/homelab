@@ -56,4 +56,4 @@ networks:
   traefik:
     external: true
   keycloack:
-    external: true
+    name: keycloack
