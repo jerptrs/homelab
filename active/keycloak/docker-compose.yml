@@ -1,4 +1,3 @@
-# docker run -p 8080:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:26.0.5 start-dev
 services:
   keycloak:
     container_name: ${SERVICE:-keycloak}
@@ -30,7 +29,8 @@ services:
       - KC_DB_PASSWORD=${MYSQL_PASSWORD}
       - KC_FEATURES=${KC_FEATURES}
       - KC_HEALTH_ENABLED=true
-    command: start-dev
+      - KC_HOSTNAME=https://${DOMAIN}
+    command: start-prod
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 2m
