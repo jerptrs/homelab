@@ -23,6 +23,8 @@ services:
       - INFLUX_HOST=${INFLUX_HOST}
       - INFLUX_ORG=${INFLUX_ORG}
     user: telegraf:993 # stat -c '%g' /var/run/docker.sock
+    dns:
+      - 192.168.178.3
 
 volumes:
   data:
