@@ -31,11 +31,10 @@ services:
       - KC_HEALTH_ENABLED=true
     command: start --hostname ${DOMAIN} --proxy-headers xforwarded --http-enabled true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
-      interval: 2m
-      timeout: 10s
-      retries: 3
-      start_period: 30s
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health/ready"]
+      interval: 15s
+      timeout: 2s
+      retries: 15
 
   db:
     container_name: ${SERVICE:-keycloak}-db
