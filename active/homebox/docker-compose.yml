@@ -1,7 +1,7 @@
 services:
   homebox:
     container_name: ${SERVICE:-homebox}
-    image: ghcr.io/hay-kot/homebox:latest
+    image: ghcr.io/sysadminsmedia/homebox:latest
     restart: unless-stopped
     ports:
       - ${INT_PORT}:7745
