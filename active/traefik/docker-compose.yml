@@ -4,8 +4,8 @@ services:
     image: traefik:v3.2
     restart: unless-stopped
     ports:
-      - 80:80
-      - 443:443
+      - ${HTTP_PORT:-80}:80
+      - ${HTTPS_PORT:-443}:443
       - ${INT_PORT:-0}:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -18,18 +18,18 @@ services:
       - traefik
     labels:
       - traefik.enable=true
-      - traefik.http.routers.${SERVICE}.rule=Host(`${TRAEFIK_DOMAIN}`)
-      - traefik.http.routers.${SERVICE}.entrypoints=https
-      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.routers.${SERVICE}.service=api@internal
-      - traefik.http.routers.${SERVICE}.middlewares=strip
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=8080
+      - traefik.http.routers.${SERVICE:-traefik}.rule=Host(`${TRAEFIK_DOMAIN}`)
+      - traefik.http.routers.${SERVICE:-traefik}.entrypoints=https
+      - traefik.http.routers.${SERVICE:-traefik}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${SERVICE:-traefik}.service=api@internal
+      - traefik.http.routers.${SERVICE:-traefik}.middlewares=strip
+      - traefik.http.services.${SERVICE:-traefik}.loadbalancer.server.port=${PORT:-8080}
       # Strip Middleware
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
       # IPAllowList Middleware
       - traefik.http.middlewares.local-ipallowlist.IPAllowList.sourcerange=${SOURCERANGE}
       # Enable IPAllowList
-      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
+      - traefik.http.routers.${SERVICE:-traefik}.middlewares=local-ipallowlist@docker
       # CrowdSec Middleware
       - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.crowdseclapikey=${LAPI_KEY}
       - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.enabled=true
@@ -38,7 +38,7 @@ services:
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
     command:
       # Logging
-      - --log.level=${LOG_LEVEL}
+      - --log.level=${LOG_LEVEL:-info}
       - --accesslog=true
       - --accesslog.filepath=/var/log/traefik/access.log
       - --accesslog.filters.statuscodes=200,300-302,404
@@ -50,14 +50,14 @@ services:
       - --api.insecure=true
       # Certificate
       - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
-      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=${DNS_PROVIDER:-cloudflare}
       - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
       - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
       # HTTP Redirect
-      - --entrypoints.http.address=:${HTTP_PORT}
+      - --entrypoints.http.address=:${HTTP_PORT:-80}
       - --entrypoints.http.http.redirections.entrypoint.to=https
       # HTTPS
-      - --entrypoints.https.address=:${HTTPS_PORT}
+      - --entrypoints.https.address=:${HTTPS_PORT:-443}
       - --entrypoints.http.http.redirections.entrypoint.scheme=https
       - --entrypoints.https.http.tls=true
       - --entrypoints.https.http.tls.certResolver=letsencrypt
