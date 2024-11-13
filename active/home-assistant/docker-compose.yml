@@ -5,18 +5,19 @@ services:
     restart: unless-stopped
     volumes:
       - config:/config
+      - /run/dbus:/run/dbus:ro
       # Timesync
       - /etc/localtime:/etc/localtime:ro
     networks:
        - traefik
     labels:
       - traefik.enable=true
-      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
-      - traefik.http.routers.${SERVICE}.entrypoints=https
-      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
-      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.http.routers.${SERVICE:-home-assistant}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE:-home-assistant}.entrypoints=https
+      - traefik.http.routers.${SERVICE:-home-assistant}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE:-home-assistant}.loadbalancer.server.port=${PORT}
       - traefik.docker.network=traefik
-      - traefik.http.routers.${SERVICE:-heimdall}.middlewares=local-ipallowlist@docker
+      - traefik.http.routers.${SERVICE:-home-assistant}.middlewares=local-ipallowlist@docker
     privileged: true
 
 volumes:
