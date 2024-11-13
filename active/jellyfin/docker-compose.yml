@@ -9,7 +9,7 @@ services:
     volumes:
       - config:/config
       - cache:/cache
-      - /mmt/media/tube-archivist:/tube-archivist
+      - ${HOST_MEDIA_PATH:-/mmt/media/tube-archivist}:/tube-archivist
       # Timesync
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -22,7 +22,7 @@ services:
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
     environment:
-      - JELLYFIN_PublishedServerUrl: https://${DOMAIN}
+      JELLYFIN_PublishedServerUrl: https://${DOMAIN}
   
 volumes:
   config:
