@@ -3,6 +3,8 @@ services:
     container_name: ${SERVICE:-home-assistant}
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
+    ports:
+      - ${INT_PORT:0}:8123
     volumes:
       - config:/config
       - /run/dbus:/run/dbus:ro
