@@ -11,7 +11,7 @@ services:
     networks:
        - traefik
     labels:
-      - traefik.enable=true
+      #- traefik.enable=true
       - traefik.http.routers.${SERVICE:-home-assistant}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE:-home-assistant}.entrypoints=https
       - traefik.http.routers.${SERVICE:-home-assistant}.tls.certresolver=letsencrypt
