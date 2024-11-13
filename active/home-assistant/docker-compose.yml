@@ -18,7 +18,7 @@ services:
       - traefik.http.services.${SERVICE:-home-assistant}.loadbalancer.server.port=${PORT}
       - traefik.docker.network=traefik
       - traefik.http.routers.${SERVICE:-home-assistant}.middlewares=local-ipallowlist@docker
-    privileged: true
+    hostname: ${DOMAIN}
 
 volumes:
   config:
