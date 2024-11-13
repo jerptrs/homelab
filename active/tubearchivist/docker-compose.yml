@@ -4,7 +4,7 @@ services:
     image: bbilly1/tubearchivist:latest
     restart: unless-stopped
     ports:
-      - ${INT_PORT}:8000
+      - ${INT_PORT:-0}:8000
     volumes:
       - ${STORAGE_PATH}:/youtube
       - cache:/cache
