@@ -23,7 +23,6 @@ services:
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
     environment:
       JELLYFIN_PublishedServerUrl: https://${DOMAIN}
-    user: 0:0
   
 volumes:
   config:
