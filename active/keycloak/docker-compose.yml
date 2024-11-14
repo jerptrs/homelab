@@ -15,7 +15,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
-      - traefik.http.routers.${SERVICE}.rule=${TRAEFIK_DOMAINS}
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
