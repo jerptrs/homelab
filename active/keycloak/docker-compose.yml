@@ -30,8 +30,8 @@ services:
       - KC_HEALTH_ENABLED=true
       - KC_PROXY_HEADERS=xforwarded
       - KC_HTTP_ENABLED=true
-      - KC_HOSTNAME=${DOMAIN}
-      - KC_HOSTNAME_ADMIN=${ADMIN_DOMAIN}
+      - KC_HOSTNAME=https://${DOMAIN}
+      - KC_HOSTNAME_ADMIN=https://${ADMIN_DOMAIN}
       - KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
     command: start
   db:
