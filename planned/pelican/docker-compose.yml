@@ -1,0 +1,34 @@
+# docker run -it -p 8444:8444 -p 8443:8443 -v /path/to/your/data/:/tmp/pelican --name=pelican-origin hub.opensciencegrid.org/pelican_platform/origin:latest serve -v /tmp/pelican:/foo/bar -f <federation>
+services:
+  pelican:
+    container_name: ${SERVICE}
+    image: 
+    restart: unless-stopped
+    ports:
+      -
+    volumes:
+      -
+    networks:
+      - 
+    labels:
+      - 
+    environment:
+      -
+    # depending if required
+    network_mode: 
+    user:
+    command:
+      -
+    healthcheck:
+      test: ["executable", "arg"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      - serviceName
+    ulimits:
+
+volumes:
+
+networks:

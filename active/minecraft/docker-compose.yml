@@ -1,0 +1,37 @@
+services:
+  minecraft:
+    container_name: ${SERVICE}
+    image: itzg/minecraft-server:latest
+    restart: unless-stopped
+    ports:
+      - 25565:25565
+    volumes:
+      - data:/data:rw
+      # Timesync
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE}.rule=Host(`${BLUEMAP_DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${BLUEMAP_PORT}
+    environment:
+      EULA: TRUE
+      MEMORY: 8G
+      PAPERMC_FLAGS: ""
+      TYPE: PAPER
+      VERSION: ${VERSION}
+      PLUGINS: |
+        https://github.com/BlueMap-Minecraft/BlueMap/releases/download/v5.4/bluemap-5.4-paper.jar
+    stdin_open: true
+    tty: true
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  traefik:
+    external: true
