@@ -5,6 +5,7 @@ services:
     restart: always
     ports:
       - ${INT_PORT:-0}:8000
+      - 9999:9999 # healthcheck?
     volumes:
       - data:/updater/data
       # Timesync
