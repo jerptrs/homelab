@@ -2,32 +2,20 @@
 services:
   pelican:
     container_name: ${SERVICE}
-    image: 
+    image: hub.opensciencegrid.org/pelican_platform/origin:latest
     restart: unless-stopped
     ports:
-      -
+      - 8443:8443
     volumes:
-      -
+      - /
     networks:
       - 
     labels:
       - 
     environment:
       -
-    # depending if required
-    network_mode: 
-    user:
     command:
-      -
-    healthcheck:
-      test: ["executable", "arg"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-    depends_on:
-      - serviceName
-    ulimits:
+      - serve
 
 volumes:
 
