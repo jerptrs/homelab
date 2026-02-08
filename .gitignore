@@ -1,0 +1,6 @@
+**/.env
+**/ansible.pub
+homelab
+.vscode
+.venv
+.ansible

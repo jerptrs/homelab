@@ -1,1 +1,3 @@
 # homelab
+
+git gud.

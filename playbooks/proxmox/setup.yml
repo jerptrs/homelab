@@ -1,0 +1,31 @@
+- name: Proxmox Ansible User Setup
+  hosts: proxmox
+  tasks:
+  - name: Install sudo package
+    ansible.builtin.apt:
+      name: sudo
+      state: present
+
+  - name: Create ansible user
+    ansible.builtin.user:
+      name: ansible
+      shell: '/bin/bash'
+
+  - name: Add ansible ssh key
+    ansible.posix.authorized_key:
+      user: ansible
+      key: "{{ lookup('file', 'ansible.pub') }}"
+      state: present
+
+  - name: Add ansible to sudoers
+    ansible.builtin.copy:
+      src: sudoers_ansible
+      dest: /etc/sudoers.d/ansible
+      owner: root
+      group: root
+      mode: "0440"
+
+  - name: Install proxmoxer
+    ansible.builtin.apt:
+      name: python3-proxmoxer
+      state: present

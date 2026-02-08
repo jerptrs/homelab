@@ -1,0 +1,43 @@
+services:
+  dockhand:
+    container_name: ${SERVICE:-adguard}
+    image: fnsys/dockhand:latest
+    restart: unless-stopped
+    ports:
+      - ${INT_PORT:-0}:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data:/app/data
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/dockhand
+    networks:
+      - dockhand
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: ${SERVICE}-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: dockhand
+    networks:
+      - dockhand
+
+volumes:
+  postgres:
+  data:
+
+networks:
+  dockhand:
+    name: dockhand

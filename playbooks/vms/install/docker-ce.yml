@@ -1,0 +1,7 @@
+- name: InstallDocker
+  hosts: docker
+  become: true
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        docker_package: docker-ce

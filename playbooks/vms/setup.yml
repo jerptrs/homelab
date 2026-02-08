@@ -1,0 +1,35 @@
+- name: Docker Ansible User Setup
+  hosts: docker
+  tasks:
+    - name: Upgrade installed packages
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+    - name: Install sudo package
+      ansible.builtin.apt:
+        name: sudo
+        state: present
+    - name: Create ansible user
+      ansible.builtin.user:
+        name: ansible
+        shell: '/bin/bash'
+    - name: Add ansible ssh key
+      ansible.posix.authorized_key:
+        user: ansible
+        key: "{{ lookup('file', 'ansible.pub') }}"
+        state: present
+    - name: Add ansible to sudoers
+      ansible.builtin.copy:
+        src: sudoers_ansible
+        dest: /etc/sudoers.d/ansible
+        owner: root
+        group: root
+        mode: "0440"
+    - name: Add docker group
+      ansible.builtin.group:
+        name: docker
+        state: present
+    - name: Add Ansible user to group
+      ansible.builtin.user:
+        name: ansible
+        group: docker

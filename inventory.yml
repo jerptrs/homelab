@@ -1,0 +1,6 @@
+all:
+  hosts:
+    proxmox:
+      ansible_host: 10.10.1.20
+    docker:
+      ansible_host: 10.10.1.100

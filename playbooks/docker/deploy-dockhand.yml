@@ -1,0 +1,22 @@
+- name: DockhandSetup
+  hosts: docker
+  tasks:
+    - name: Ensure project directory is present
+      ansible.builtin.file:
+        path: ~/dockhand
+        state: directory
+        mode: "0755"
+    - name: Copy compose to Node
+      ansible.builtin.copy:
+        src: docker-compose.dockhand.yml
+        dest: ~/dockhand/docker-compose.yml
+        mode: "0644"
+    - name: Copy .env to Node
+      ansible.builtin.copy:
+        src: .env
+        dest: ~/dockhand/.env
+        mode: "0644"
+    - name: Create and start docker compose services
+      community.docker.docker_compose_v2:
+        project_src: ./dockhand
+        state: present

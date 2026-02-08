@@ -1,0 +1,27 @@
+- name: Create new VM
+  hosts: proxmox
+  become: false
+  gather_facts: false
+  vars_prompt:
+    - name: api_token_secret
+      prompt: "Enter Proxmox API Token Secret"
+      private: true
+    - name: vm_name
+      prompt: "Enter VM Name"
+      private: false
+  tasks:
+    - name: Create new VM
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      community.proxmox.proxmox_kvm:
+        autostart: true
+        cores: 4
+        force: false
+        ipconfig: "dhcp"
+        onboot: true
+        api_user: ansible@pam
+        api_token_id: ansible
+        api_token_secret: "{{ api_token_secret }}"
+        api_host: 10.10.20.20
+        node: pve
+        name: "{{ vm_name }}"
