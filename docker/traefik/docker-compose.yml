@@ -64,8 +64,6 @@ services:
       - --entrypoints.https.http.tls.certResolver=letsencrypt
       - --entrypoints.https.http.tls.domains[0].main=${DOMAIN0}
       - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN0}
-      - --entrypoints.https.http.tls.domains[1].main=${DOMAIN1}
-      - --entrypoints.https.http.tls.domains[1].sans=*.${DOMAIN1}
       # CrowdSec
       # - --experimental.plugins.crowdsec-bouncer.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
       # - --experimental.plugins.crowdsec-bouncer.version=v1.3.5
