@@ -1,0 +1,34 @@
+services:
+  homebox:
+    container_name: "{{ SERVICE }}"
+    image: ghcr.io/sysadminsmedia/homebox:latest
+    restart: unless-stopped
+    ports:
+      - "3000:7745"
+    volumes:
+      - data:/data/
+      # Timesync
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.{{ SERVICE }}.rule=Host(`{{ DOMAIN }}`)
+      - traefik.http.routers.{{ SERVICE }}.entrypoints=https
+      - traefik.http.routers.{{ SERVICE }}.tls.certresolver=letsencrypt
+      - traefik.http.services.{{ SERVICE }}.loadbalancer.server.port={{ PORT }}
+      - traefik.docker.network=traefik
+      - traefik.http.routers.{{ SERVICE }}.middlewares=local-ipallowlist@docker
+    environment:
+      - HBOX_LOG_LEVEL={{ LOG_LEVLE }}
+      - HBOX_LOG_FORMAT=text
+      - HBOX_WEB_MAX_UPLOAD_SIZE=10
+
+volumes:
+   data:
+     driver: local
+
+networks:
+  traefik:
+    external: true
