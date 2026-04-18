@@ -19,12 +19,12 @@ services:
       - traefik
     labels:
       - traefik.enable=false
-      - traefik.http.routers.${SERVICE:-traefik}.rule=Host(`${TRAEFIK_DOMAIN}`)
-      - traefik.http.routers.${SERVICE:-traefik}.entrypoints=https
-      - traefik.http.routers.${SERVICE:-traefik}.tls.certresolver=letsencrypt
-      - traefik.http.routers.${SERVICE:-traefik}.service=api@internal
-      - traefik.http.routers.${SERVICE:-traefik}.middlewares=strip
-      - traefik.http.services.${SERVICE:-traefik}.loadbalancer.server.port=${PORT:-8080}
+      # - traefik.http.routers.${SERVICE:-traefik}.rule=Host(`${TRAEFIK_DOMAIN}`)
+      # - traefik.http.routers.${SERVICE:-traefik}.entrypoints=https
+      # - traefik.http.routers.${SERVICE:-traefik}.tls.certresolver=letsencrypt
+      # - traefik.http.routers.${SERVICE:-traefik}.service=api@internal
+      # - traefik.http.routers.${SERVICE:-traefik}.middlewares=strip
+      # - traefik.http.services.${SERVICE:-traefik}.loadbalancer.server.port=${PORT:-8080}
       # Strip Middleware
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
       # IPAllowList Middleware
