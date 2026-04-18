@@ -1,0 +1,80 @@
+services:
+  app:
+    container_name: ${SERVICE}
+    image: ghcr.io/manyfold3d/manyfold:latest
+    ports:
+      - ${INT_PORT:-0}:3214
+    volumes:
+      # Uncomment to add a filesystem volume for your model library (or multiple if
+      # you want multiple libraries), in the form <local_path>:<container_path>.
+      # The local path could be a folder that already contains models, in which case Manyfold
+      # will scan and import them, or it could be empty.
+      # The container path can be anything; you will need to enter it in the "new library" form.
+      # - /local/path/to/your/models:/models
+      - models:/models
+    environment:
+      DATABASE_ADAPTER: postgresql # mysql2 or sqlite3 are also supported
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432 # only needed for non-standard ports
+      DATABASE_NAME: manyfold # or the path to the database file if using sqlite3
+      DATABASE_USER: ${DB_USER}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      SECRET_KEY_BASE: ${SECRET_KEY}
+      REDIS_URL: redis://redis-server:6379/1
+      PUID: 1000
+      PGID: 1000
+      # For details of other optional environment variables, including features such
+      # as multiuser mode, visit https://manyfold.app/sysadmin/configuration.html
+    restart: unless-stopped
+    depends_on:
+      - postgres-server
+      - redis-server
+    networks:
+      - manyfold
+      - traefik
+    # Optional, but recommended for better security
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
+
+  postgres:
+    container_name: ${SERVICE}-postgres
+    image: postgres:15
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - manyfold
+
+  redis-server:
+    container_name: ${SERVICE}-redis
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - manyfold
+
+volumes:
+  db:
+  models:
+
+networks:
+  manyfold:
+  traefik:
+    external: true
