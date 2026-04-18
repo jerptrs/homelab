@@ -1,5 +1,5 @@
 services:
-  app:
+  manyfold:
     container_name: ${SERVICE}
     image: ghcr.io/manyfold3d/manyfold:latest
     ports:
@@ -27,8 +27,8 @@ services:
       # as multiuser mode, visit https://manyfold.app/sysadmin/configuration.html
     restart: unless-stopped
     depends_on:
-      - postgres-server
-      - redis-server
+      - postgres
+      - redis
     networks:
       - manyfold
       - traefik
@@ -49,7 +49,6 @@ services:
       - traefik.http.routers.${SERVICE}.entrypoints=https
       - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
       - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
-      - traefik.http.routers.${SERVICE}.middlewares=local-ipallowlist@docker
 
   postgres:
     container_name: ${SERVICE}-postgres
@@ -63,7 +62,7 @@ services:
     networks:
       - manyfold
 
-  redis-server:
+  redis:
     container_name: ${SERVICE}-redis
     image: redis:7
     restart: unless-stopped
