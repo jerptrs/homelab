@@ -17,3 +17,5 @@ services:
       - PROXIED=false
         # Leaning toward using Cloudflare's proxy for these domains (optional)
         # Existing DNS records in Cloudflare keep their current proxy statuses
+    labels:
+      - traefik.enable=false
