@@ -18,22 +18,22 @@ services:
     networks:
       - traefik
     labels:
-      - traefik.enable=false
-      # - traefik.http.routers.${SERVICE:-traefik}.rule=Host(`${TRAEFIK_DOMAIN}`)
-      # - traefik.http.routers.${SERVICE:-traefik}.entrypoints=https
-      # - traefik.http.routers.${SERVICE:-traefik}.tls.certresolver=letsencrypt
-      # - traefik.http.routers.${SERVICE:-traefik}.service=api@internal
-      # - traefik.http.routers.${SERVICE:-traefik}.middlewares=strip
-      # - traefik.http.services.${SERVICE:-traefik}.loadbalancer.server.port=${PORT:-8080}
+      - traefik.enable=true
+      - traefik.http.routers.${SERVICE:-traefik}.rule=Host(`${TRAEFIK_DOMAIN}`)
+      - traefik.http.routers.${SERVICE:-traefik}.entrypoints=https
+      - traefik.http.routers.${SERVICE:-traefik}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${SERVICE:-traefik}.service=api@internal
+      - traefik.http.routers.${SERVICE:-traefik}.middlewares=strip
+      - traefik.http.services.${SERVICE:-traefik}.loadbalancer.server.port=${PORT:-8080}
       # Strip Middleware
       - traefik.http.middlewares.strip.stripprefix.prefixes=/traefik
       # IPAllowList Middleware
-      - traefik.http.middlewares.local-ipallowlist.IPAllowList.sourcerange=${SOURCERANGE}
-      # Enable IPAllowList
+      - traefik.http.middlewares.local-ipallowlist.ipallowlist.sourcerange=${SOURCERANGE}
+      # Enable IPAllowList for traefik
       - traefik.http.routers.${SERVICE:-traefik}.middlewares=local-ipallowlist@docker
       # CrowdSec Middleware
-      - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.crowdseclapikey=${LAPI_KEY}
-      - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.enabled=true
+      # - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.crowdseclapikey=${LAPI_KEY}
+      # - traefik.http.middlewares.crowdsec.plugin.crowdsec-bouncer.enabled=true
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_TOKEN}
