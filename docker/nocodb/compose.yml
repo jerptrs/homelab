@@ -8,7 +8,7 @@ services:
       - nocodb:/usr/app/data/
     restart: unless-stopped
     depends_on: 
-      root_db: 
+      postgres: 
         condition: service_healthy
     environment: 
       NC_DB: "pg://root_db:5432?u=${POSTGRES_USER}&p=${POSTGRES_PASSWORD}&d=${DATABASE}"
