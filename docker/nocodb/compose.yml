@@ -12,6 +12,16 @@ services:
         condition: service_healthy
     environment: 
       NC_DB: "pg://root_db:5432?u=${POSTGRES_USER}&p=${POSTGRES_PASSWORD}&d=${DATABASE}"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    networks:
+      - traefik
+      - nocodb
 
   postgres:
     image: postgres
@@ -27,7 +37,14 @@ services:
       timeout: 2s
     volumes:
       - postgres:/var/lib/postgresql/data
+    networks:
+      - nocodb
 
 volumes:
   nocodb:
   postgres:
+
+networks:
+  nocodb:
+  traefik:
+    external: true
