@@ -5,7 +5,7 @@ services:
     ports:
       - "8081:8080"
     volumes:
-      - nocodb:/usr/app/data/
+      - data:/usr/app/data/
     restart: unless-stopped
     depends_on: 
       postgres: 
@@ -41,7 +41,7 @@ services:
       - nocodb
 
 volumes:
-  nocodb:
+  data:
   postgres:
 
 networks:
