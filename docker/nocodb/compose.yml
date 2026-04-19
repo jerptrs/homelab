@@ -24,7 +24,7 @@ services:
       - nocodb
 
   postgres:
-    image: postgres:latest
+    image: postgres:16.6
     container_name: ${SERVICE}-postgres
     environment: 
       POSTGRES_DB: ${DATABASE}
