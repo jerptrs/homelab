@@ -1,0 +1,28 @@
+services:
+  nocodb:
+    image: gristlabs/grist:latest
+    container_name: ${SERVICE}
+    ports:
+      - ${INT_PORT:-0}:8484
+    volumes:
+      - data:/persist
+    restart: unless-stopped
+    environment: 
+      GRIST_SESSION_SECRET: ${SESSION_SECRET}
+      GRIST_DEFAULT_EMAIL: ${DEFAULT_EMAIL}
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.${SERVICE}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${SERVICE}.entrypoints=https
+      - traefik.http.routers.${SERVICE}.tls.certresolver=letsencrypt
+      - traefik.http.services.${SERVICE}.loadbalancer.server.port=${PORT}
+    networks:
+      - traefik
+
+volumes:
+  data:
+
+networks:
+  traefik:
+    external: true
