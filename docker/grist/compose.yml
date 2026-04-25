@@ -14,6 +14,7 @@ services:
       GRIST_OIDC_IDP_ISSUER: ${GRIST_OIDC_IDP_ISSUER}
       GRIST_OIDC_IDP_CLIENT_ID: ${GRIST_OIDC_IDP_CLIENT_ID}
       GRIST_OIDC_IDP_CLIENT_SECRET: ${GRIST_OIDC_IDP_CLIENT_SECRET}
+      GRIST_OIDC_SP_HOST: ${GRIST_OIDC_SP_HOST}
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
