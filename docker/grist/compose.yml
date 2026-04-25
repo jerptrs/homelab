@@ -7,7 +7,8 @@ services:
     volumes:
       - data:/persist
     restart: unless-stopped
-    environment: 
+    environment:
+      APP_HOME_URL: ${APP_HOME_URL}
       GRIST_SESSION_SECRET: ${SESSION_SECRET}
       GRIST_DEFAULT_EMAIL: ${DEFAULT_EMAIL}
       # OIDC
