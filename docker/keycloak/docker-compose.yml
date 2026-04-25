@@ -1,7 +1,7 @@
 services:
   keycloak:
     container_name: ${SERVICE:-keycloak}
-    image: quay.io/keycloak/keycloak:26.5.7
+    image: quay.io/keycloak/keycloak:26.6.1
     restart: unless-stopped
     ports:
       - ${INT_PORT:-0}:8080

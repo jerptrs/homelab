@@ -1,6 +1,6 @@
 all:
   hosts:
     proxmox:
-      ansible_host: 10.10.1.20
+      ansible_host: 192.168.178.4
     docker:
-      ansible_host: 10.10.1.100
+      ansible_host: 192.168.178.4
