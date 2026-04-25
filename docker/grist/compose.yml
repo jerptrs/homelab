@@ -10,6 +10,10 @@ services:
     environment: 
       GRIST_SESSION_SECRET: ${SESSION_SECRET}
       GRIST_DEFAULT_EMAIL: ${DEFAULT_EMAIL}
+      # OIDC
+      GRIST_OIDC_IDP_ISSUER: ${GRIST_OIDC_IDP_ISSUER}
+      GRIST_OIDC_IDP_CLIENT_ID: ${GRIST_OIDC_IDP_CLIENT_ID}
+      GRIST_OIDC_IDP_CLIENT_SECRET: ${GRIST_OIDC_IDP_CLIENT_SECRET}
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
